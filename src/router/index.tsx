@@ -6,6 +6,7 @@ import LoginPage from '@/components/auth/Login'
 import SignupPage from '@/components/auth/Signup'
 import HomePage from '@/components/home/Home'
 import CardDetail from '@/components/card/CardDetail'
+import NotificationPage from '@/components/inbox/NotificationPage'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: 'home',
         element: <HomePage />,
+      },
+      {
+        path: 'inbox',
+        element: <NotificationPage />,
       },
       {
         path: 'projects',
