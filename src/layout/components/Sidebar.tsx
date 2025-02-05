@@ -1,5 +1,6 @@
+import profileIcon from '@/assets/images/profile.png'
+import { MOCK_PROJECT_LIST } from '@/shared/mock/projectList'
 import { Icon } from '@/shared/ui/Icon'
-import profileIcon from '@/assets/images/profile.png' //교체예정
 import { useSidebarStore } from '@/store/sidebarStore'
 import { useModalStore } from '@/store/useModalStore'
 import { useEffect } from 'react'
@@ -112,17 +113,22 @@ export default function Sidebar() {
           </div>
           {/* api 적용할때 반복문으로 수정 */}
           <div className="space-y-2">
-            <Link
-              to="/projects"
-              className={`flex items-center  p-2 hover:bg-gray-100 rounded-lg cursor-pointer ${isOpen ? 'gap-2' : ''}`}
-            >
-              <div className="w-3.5 h-3.5 rounded-sm bg-red-500 min-w-[8px]"></div>
-              <span
-                className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
-              >
-                Project Manager
-              </span>
-            </Link>
+            {MOCK_PROJECT_LIST.map((project) => {
+              return (
+                <Link
+                  key={project.id}
+                  to={`/project/${project.id}`}
+                  className={`flex items-center  p-2 hover:bg-gray-100 rounded-lg cursor-pointer ${isOpen ? 'gap-2' : ''}`}
+                >
+                  <div className="w-3.5 h-3.5 rounded-sm bg-red-500 min-w-[8px]"></div>
+                  <span
+                    className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
+                  >
+                    {project.name}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </nav>

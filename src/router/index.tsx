@@ -1,12 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import ProjectMainSection from '@/components/projectMain/ProjectMainSection'
-import RootLayout from '@/layout'
 import LoginPage from '@/components/auth/Login'
 import SignupPage from '@/components/auth/Signup'
-import HomePage from '@/components/home/Home'
 import CardDetail from '@/components/card/CardDetail'
+import HomePage from '@/components/home/Home'
 import NotificationPage from '@/components/inbox/NotificationPage'
+import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
+import SectionContainer from '@/components/section/SectionContainer'
+import RootLayout from '@/layout'
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,15 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <ProjectMainSection />,
+            element: <div>Main Page</div>,
+          },
+          {
+            path: '/project/:projectId',
+            element: <ProjectMainContainer />,
+          },
+          {
+            path: '/project/:projectId/section/:sectionId',
+            element: <SectionContainer />,
           },
           {
             path: ':cardId', // 중첩 라우팅 유지

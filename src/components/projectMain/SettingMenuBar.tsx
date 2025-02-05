@@ -10,7 +10,7 @@ export default function SettingMenuBar({ page }: PageProps) {
   const { openModal } = useModalStore()
 
   return (
-    <div className="px-3 py-2 md:py-2.5 flex justify-between border-b border-bodyBorder">
+    <div className="px-3 py-2 md:py-2.5 flex justify-between border-b border-bodyBorder bg-white">
       <div
         className={`flex items-center gap-2 md:gap-3 ${page === 'project' && 'hidden'}`}
       >
@@ -18,16 +18,14 @@ export default function SettingMenuBar({ page }: PageProps) {
         <Button>
           <Icon
             icon="Update"
-            className="w-3 h-3 md:w-[14px] md:h-[14px]"
-            color="white"
+            className="w-3 h-3 md:w-[14px] md:h-[14px] fill-white"
             onClick={() => openModal('update-section')}
           />
         </Button>
         <Button>
           <Icon
             icon="Delete"
-            className="w-3 h-3 md:w-[14px] md:h-[14px]"
-            color="white"
+            className="w-3 h-3 md:w-[14px] md:h-[14px] fill-white"
           />
         </Button>
       </div>
@@ -42,8 +40,7 @@ export default function SettingMenuBar({ page }: PageProps) {
         <Button className="flex gap-0.5">
           <Icon
             icon="Category"
-            className="w-3 h-3 md:w-3.5 md:h-3.5"
-            color="white"
+            className="w-3 h-3 md:w-3.5 md:h-3.5 fill-white"
           />
           <span className="hidden md:block">카테고리</span>
         </Button>

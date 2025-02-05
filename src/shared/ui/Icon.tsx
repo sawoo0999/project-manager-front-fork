@@ -3,10 +3,9 @@
  *
  * @example
  * <Icon
- *   icon="Home"                      // 필수: 아이콘 이름
- *   size={24}                        // 선택: 크기 (기본값: 24)
- *   color="blue"                     // 선택: 색상
- *   className="hover:opacity-80"     // 선택: Tailwind 클래스
+ *   icon="Home"             // 필수: 아이콘 이름
+ *   size={24}               // 선택: 크기 (기본값: 24)
+ *   className="fill-white"  // 선택: Tailwind 클래스(fill, stroke 속성 테스트 후 적용)
  * />
  */
 
@@ -89,26 +88,16 @@ const ICONS: Record<IconName, FC<SVGProps<SVGSVGElement>>> = {
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   icon: IconName
   size?: number
-  color?: string
   className?: string
-  onClick?: () => void
+  onClick?: (() => void) | ((e: React.MouseEvent<SVGSVGElement>) => void)
 }
 
-export const Icon = ({
-  icon,
-  size = 24,
-  color,
-  className,
-  onClick,
-}: IconProps) => {
+export const Icon = ({ icon, size = 24, className, onClick }: IconProps) => {
   const SelectedIcon = ICONS[icon]
   return (
     <SelectedIcon
       width={size}
       height={size}
-      color={color}
-      fill={color}
-      stroke={color}
       className={className}
       onClick={onClick}
     />

@@ -1,12 +1,18 @@
+import { MOCK_PROJECT_LIST } from '@/shared/mock/projectList'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
+import { useParams } from 'react-router-dom'
 
 export default function ProjectHeader() {
+  const { projectId } = useParams()
+  const project = MOCK_PROJECT_LIST.find(
+    (project) => project.id === Number(projectId),
+  )
   return (
-    <div className="flex justify-between p-3 border-b border-bodyBorder">
+    <div className="flex justify-between p-3 border-b border-bodyBorder bg-white rounded-tl-lg">
       <div className="flex items-center gap-3">
         <div className="bg-category-red w-5 h-5 md:w-10 md:h-10 rounded-button"></div>
-        <div className="text-base md:text-xl">Project Manager</div>
+        <div className="text-base md:text-xl">{project?.name}</div>
         <Icon
           icon="Setting"
           className="w-[14px] h-[14px] md:w-5 md:h-5 cursor-pointer"
