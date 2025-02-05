@@ -1,12 +1,13 @@
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface ActionButtonsProps {
   isComplete: boolean
 }
 
 export function ActionButtons({ isComplete }: ActionButtonsProps) {
+  const navigate = useNavigate()
   return (
     <div className="flex w-full justify-between">
       <Button
@@ -18,13 +19,13 @@ export function ActionButtons({ isComplete }: ActionButtonsProps) {
         />
         <span>{isComplete ? '진행중으로 변경' : '완료로 표시'}</span>
       </Button>
-      <div className="flex gap-2">
+      <div className="flex gap-2 ">
         <Link to="edit">
           <Icon icon="Setting" size={18} className="sm:w-5 sm:h-5" />
         </Link>
-        <Link to="/main">
-          <Icon icon="Home" size={18} className="sm:w-5 sm:h-5" />
-        </Link>
+        <button onClick={() => navigate(-1)} className="h-4 sm:w-5 sm:h-5">
+          <Icon icon="Home" size={18} />
+        </button>
       </div>
     </div>
   )

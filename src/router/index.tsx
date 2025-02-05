@@ -7,17 +7,23 @@ import HomePage from '@/components/home/Home'
 import NotificationPage from '@/components/inbox/NotificationPage'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
 import SectionContainer from '@/components/section/SectionContainer'
-import RootLayout from '@/layout'
+import { AuthLayout, MainLayout, LandingLayout } from '@/layout/index'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayout />,
+    element: <LandingLayout />,
     children: [
       {
         index: true,
-        element: <div>랜딩 페이지지</div>,
+        element: <div>랜딩 페이지</div>,
       },
+    ],
+  },
+  {
+    path: '/',
+    element: <AuthLayout />,
+    children: [
       {
         path: 'login',
         element: <LoginPage />,
@@ -26,6 +32,12 @@ const router = createBrowserRouter([
         path: 'signup',
         element: <SignupPage />,
       },
+    ],
+  },
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
       {
         path: 'home',
         element: <HomePage />,
@@ -35,36 +47,27 @@ const router = createBrowserRouter([
         element: <NotificationPage />,
       },
       {
-        path: 'projects',
+        path: 'project',
         children: [
           {
-            index: true,
-            element: <div>Main Page</div>,
-          },
-          {
-            path: '/project/:projectId',
+            path: ':projectId',
             element: <ProjectMainContainer />,
           },
           {
-            path: '/project/:projectId/section/:sectionId',
+            path: ':projectId/section/:sectionId',
             element: <SectionContainer />,
           },
           {
-            path: ':cardId', // 중첩 라우팅 유지
-            children: [
-              {
-                index: true,
-                element: <CardDetail />,
-              },
-              {
-                path: 'edit',
-                element: <CardDetail mode="edit" />,
-              },
-              {
-                path: 'complete',
-                element: <CardDetail mode="complete" />,
-              },
-            ],
+            path: ':projectId/card/:cardId',
+            element: <CardDetail />,
+          },
+          {
+            path: ':projectId/card/:cardId/edit',
+            element: <CardDetail mode="edit" />,
+          },
+          {
+            path: ':projectId/card/:cardId/complete',
+            element: <CardDetail mode="complete" />,
           },
         ],
       },

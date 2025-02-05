@@ -26,9 +26,8 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`bg-gradient-to-b from-white to-screenBg rounded-tr-lg flex flex-col transition-all duration-300 ease-in-out text-sm  font-pretendard
-        ${isOpen ? 'w-64 px-2 py-1' : 'w-16 items-center'} 
-        h-[calc(100vh-64px)]`}
+      className={`p-2 bg-gradient-to-b from-white to-screenBg rounded-tr-lg flex flex-col h-[calc(100vh-64px)] transition-all duration-300 ease-in-out text-sm font-pretendard
+      ${isOpen ? 'w-64' : 'w-16 items-center'}`}
     >
       <div
         className="p-4 sm:px-2"
@@ -37,7 +36,7 @@ export default function Sidebar() {
         }}
       >
         <button
-          className={` bg-[#82CD47] text-white rounded-button hover:bg-primary/80 transition-all duration-300 h-10
+          className={` bg-primary text-white rounded-button hover:bg-primary/80 transition-all duration-300 h-10
           ${isOpen ? 'w-19 px-4' : 'w-7 h-7'}`}
         >
           <div
@@ -49,7 +48,7 @@ export default function Sidebar() {
               className={`transition-all duration-300 whitespace-nowrap   ${isOpen ? 'mr-1 opacity-100' : 'opacity-0 w-0'}`}
             />
             <span
-              className={`transition-all duration-300 whitespace-nowrap   ${isOpen ? 'opacity-100' : 'opacity-0 w-0'}`}
+              className={`transition-all duration-300 whitespace-nowrap ${isOpen ? 'opacity-100' : 'opacity-0 w-0'}`}
             >
               프로젝트
             </span>
