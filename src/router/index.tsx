@@ -7,6 +7,7 @@ import CategoryContainer from '@/components/category/CategoryContainer'
 import HomePage from '@/components/home/Home'
 import NotificationPage from '@/components/inbox/NotificationPage'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
+import ProjectUpdateContainer from '@/components/projectUpdate/ProjectUpdateContainer'
 import SectionContainer from '@/components/section/SectionContainer'
 import { AuthLayout, LandingLayout, MainLayout } from '@/layout/index'
 
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: 'category',
             element: <CategoryContainer />,
+          },
+          {
+            path: 'update',
+            element: <ProjectUpdateContainer />,
           },
           {
             path: 'section/:sectionId',
