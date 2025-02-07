@@ -14,7 +14,7 @@ interface CreateCategoryRequest {
 
 export const getAllCategories = async (projectNumber: number) => {
   try {
-    const response = await axiosApi.get('/api/categories', {
+    const response = await axiosApi.get('/categories', {
       params: {
         project_id: projectNumber,
       },
@@ -32,11 +32,11 @@ export const getAllCategories = async (projectNumber: number) => {
 }
 
 export const createCategory = async (requestData: CreateCategoryRequest) => {
-  const response = await axiosApi.post('/api/categories', requestData)
+  const response = await axiosApi.post('/categories', requestData)
   return response.data
 }
 
 export const getProjects = async () => {
-  const response = await axiosApi.get('/api/projects')
+  const response = await axiosApi.get('/projects')
   return response.data
 }

@@ -13,7 +13,7 @@ export const updateCard = async ({
   cardId: string
   data: FormData
 }) => {
-  const response = await fetch(`/api/cards/${cardId}`, {
+  const response = await fetch(`/cards/${cardId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

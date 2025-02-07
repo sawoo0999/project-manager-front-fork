@@ -20,7 +20,7 @@ interface LoginResponse {
 export const postLogin = async (
   payload: LoginRequest,
 ): Promise<LoginResponse> => {
-  const response = await axiosApi.post('/api/users/login', payload)
+  const response = await axiosApi.post('/users/login', payload)
   return response.data
 }
 
@@ -29,7 +29,7 @@ export const postLogout = async () => {
   console.log('현재 토큰:', useSessionStore.getState()?.access_token) // 토큰이 있는지 확인
 
   try {
-    const response = await axiosApi.get('/api/users/logout')
+    const response = await axiosApi.get('/users/logout')
     console.log('로그아웃 응답:', response)
 
     document.cookie =
@@ -45,6 +45,6 @@ export const postSignup = async (payload: SignupRequest) => {
   console.log('VITE_API_URL:', import.meta.env.VITE_API_URL)
   console.log('API Base URL:', apiUrl)
   console.log('TEST:::', payload)
-  const response = await axiosApi.post('/api/users', payload)
+  const response = await axiosApi.post('/users', payload)
   return response?.data || {}
 }
