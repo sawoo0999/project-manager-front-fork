@@ -30,8 +30,8 @@ export default function Section({ sectionName, sectionId }: SectionProps) {
           icon={isOpen ? 'AngleDoubleUp' : 'AngleDoubleDown'}
           size={20}
           onClick={(e: React.MouseEvent<SVGSVGElement>) => {
-            e.preventDefault() // 링크의 기본 동작을 막음
-            e.stopPropagation() // 이벤트 버블링을 막음
+            e.preventDefault()
+            e.stopPropagation()
             setIsOpen(!isOpen)
           }}
         />
@@ -51,17 +51,6 @@ export default function Section({ sectionName, sectionId }: SectionProps) {
           <Icon icon="Plus" size={14} />
         </div>
       </div>
-      {/* <div className="hidden md:block">
-        {MOCK_CARD_LIST.map((card, index) => {
-          return <Card key={`${card.title}-${index}`} {...card} />
-        })}
-        <div
-          className="w-full h-[81px] bg-white flex justify-center items-center cursor-pointer rounded-card"
-          onClick={() => openModal('create-card')}
-        >
-          <Icon icon="Plus" size={14} />
-        </div>
-      </div> */}
     </div>
   )
 }

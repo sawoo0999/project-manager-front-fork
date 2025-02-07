@@ -3,11 +3,12 @@ import { createBrowserRouter } from 'react-router-dom'
 import LoginPage from '@/components/auth/Login'
 import SignupPage from '@/components/auth/Signup'
 import CardDetail from '@/components/card/CardDetail'
+import CategoryContainer from '@/components/category/CategoryContainer'
 import HomePage from '@/components/home/Home'
 import NotificationPage from '@/components/inbox/NotificationPage'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
 import SectionContainer from '@/components/section/SectionContainer'
-import { AuthLayout, MainLayout, LandingLayout } from '@/layout/index'
+import { AuthLayout, LandingLayout, MainLayout } from '@/layout/index'
 
 const router = createBrowserRouter([
   {
@@ -46,28 +47,40 @@ const router = createBrowserRouter([
         path: 'inbox',
         element: <NotificationPage />,
       },
+
       {
-        path: 'project',
+        path: 'project/:projectId',
         children: [
           {
-            path: ':projectId',
+            index: true,
             element: <ProjectMainContainer />,
           },
           {
-            path: ':projectId/section/:sectionId',
-            element: <SectionContainer />,
+            path: 'category',
+            element: <CategoryContainer />,
           },
           {
-            path: ':projectId/card/:cardId',
-            element: <CardDetail />,
-          },
-          {
-            path: ':projectId/card/:cardId/edit',
-            element: <CardDetail mode="edit" />,
-          },
-          {
-            path: ':projectId/card/:cardId/complete',
-            element: <CardDetail mode="complete" />,
+            path: 'section/:sectionId',
+            children: [
+              { index: true, element: <SectionContainer /> },
+              {
+                path: ':cardId', // 중첩 라우팅 유지
+                children: [
+                  {
+                    index: true,
+                    element: <CardDetail />,
+                  },
+                  {
+                    path: 'edit',
+                    element: <CardDetail mode="edit" />,
+                  },
+                  {
+                    path: 'complete',
+                    element: <CardDetail mode="complete" />,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

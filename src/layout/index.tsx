@@ -1,5 +1,5 @@
 import AuthLayout from './auth/AuthLayout'
-import MainLayout from './main/MainLayout'
 import LandingLayout from './landing/LandingLayout'
+import MainLayout from './main/MainLayout'
 
-export { AuthLayout, MainLayout, LandingLayout }
+export { AuthLayout, LandingLayout, MainLayout }
