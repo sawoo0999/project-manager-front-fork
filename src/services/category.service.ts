@@ -12,6 +12,12 @@ interface CreateCategoryRequest {
   color: string
 }
 
+export interface Project {
+  id: string
+  name: string
+  color: string
+}
+
 export const getAllCategories = async (projectNumber: number) => {
   try {
     const response = await axiosApi.get('/categories', {
