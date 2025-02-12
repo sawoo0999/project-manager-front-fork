@@ -1,48 +1,40 @@
 import axiosApi from '@/helper/api_helper'
-import axios from 'axios'
+import { UppercaseColorKeys } from './projects.service'
 
 // interface CategoriesRequest {
 //   project_id: number
 // }
 
-interface CreateCategoryRequest {
-  project_id: number
+export interface Category {
+  projectId: number
+  id: string
   name: string
   description: string
   color: string
 }
 
-export interface Project {
-  id: string
+interface CreateCategoryRequest {
+  projectId: number
   name: string
-  color: string
+  description: string
+  color: UppercaseColorKeys
 }
 
 export const getAllCategories = async (projectNumber: number) => {
   try {
     const response = await axiosApi.get('/categories', {
       params: {
-        project_id: projectNumber,
+        projectId: projectNumber,
       },
     })
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log('Request URL:', error.config?.url)
-      console.log('Request Method:', error.config?.method)
-      console.log('Request Params:', error.config?.params)
-      console.log('Response Data:', error.response?.data)
-    }
+    console.error(error)
     throw error
   }
 }
 
-export const createCategory = async (requestData: CreateCategoryRequest) => {
-  const response = await axiosApi.post('/categories', requestData)
-  return response.data
-}
-
-export const getProjects = async () => {
-  const response = await axiosApi.get('/projects')
+export const createCategory = async (payload: CreateCategoryRequest) => {
+  const response = await axiosApi.post('/categories', payload)
   return response.data
 }

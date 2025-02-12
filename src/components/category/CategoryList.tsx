@@ -1,5 +1,8 @@
-import { CATEGORY_COLORS } from '@/shared/constants/color'
-import { MOCK_CATEGORY } from '@/shared/mock/category'
+import {
+  CATEGORY_COLORS,
+  UppercaseCategoryColor,
+} from '@/shared/constants/color'
+import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
@@ -7,14 +10,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { COLORS } from '../modal/CreateProjectModal'
 
 const formSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1).max(50),
-  color: z.string().min(1),
+  color: z.enum(COLORS),
 })
 
-export default function CategoryList() {
+export default function CategoryList({ projectId }: { projectId: number }) {
   const {
     register,
     handleSubmit,
@@ -27,12 +31,15 @@ export default function CategoryList() {
     defaultValues: {
       name: '',
       description: '',
-      color: '',
+      color: 'BLUE',
     },
   })
 
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editColor, setEditColor] = useState(false)
+
+  const { data: categoryList } = useQueryCategoryList(projectId)
+  console.log('categoryList', projectId)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values)
@@ -52,8 +59,8 @@ export default function CategoryList() {
           설명
         </div>
       </div>
-      {MOCK_CATEGORY.map((category) => {
-        const isEditing = editingId === category.id
+      {categoryList?.data?.map((category) => {
+        const isEditing = editingId === (category.id as unknown as number)
         return (
           <form
             key={category.id}
@@ -88,7 +95,11 @@ export default function CategoryList() {
                           type="button"
                           key={key}
                           onClick={() => {
-                            setValue('color', color, { shouldValidate: true })
+                            setValue(
+                              'color',
+                              key.toUpperCase() as UppercaseCategoryColor,
+                              { shouldValidate: true },
+                            )
                             setEditColor(false)
                           }}
                           className={`w-4 h-4 md:h-5 md:w-5 rounded-card`}
@@ -163,10 +174,10 @@ export default function CategoryList() {
                   variant="category"
                   className={`p-1 md:p-2`}
                   onClick={() => {
-                    setEditingId(category.id)
+                    setEditingId(category.id as unknown as number)
                     setValue('name', category.name)
                     setValue('description', category.description)
-                    setValue('color', category.color)
+                    setValue('color', category.color as UppercaseCategoryColor)
                   }}
                 >
                   <Icon

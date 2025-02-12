@@ -10,6 +10,8 @@ export type CategoryColor =
   | 'indigo'
   | 'pink'
 
+export type UppercaseCategoryColor = Uppercase<CategoryColor>
+
 export const CATEGORY_COLORS = {
   blue: '#4285F4',
   red: '#DB4437',
@@ -21,4 +23,4 @@ export const CATEGORY_COLORS = {
   khaki: '#9E9D24',
   indigo: '#5C6BC0',
   pink: '#F06292',
-}
+} as const

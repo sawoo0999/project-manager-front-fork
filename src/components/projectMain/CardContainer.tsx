@@ -1,15 +1,20 @@
-import { MOCK_SECTION_LIST } from '@/shared/mock/section'
+import { useQuerySectionList } from '@/shared/queries/useQuerySectionList'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import Section from './Section'
 
-export default function CardContainer() {
+export default function CardContainer({ projectId }: { projectId: number }) {
   const { openModal } = useModalStore()
-  // const { projectId } = useParams()  // 프로젝트 id로 섹션 및 카드 정보 불러올 예정
+
+  const { data, isError } = useQuerySectionList(projectId)
+
+  if (isError) {
+    return <div className="text-red-500">Error loading sections.</div>
+  }
 
   return (
     <div className="bg-bodyBg flex-1 md:flex md:px-3 md:gap-3 md:overflow-x-auto">
-      {MOCK_SECTION_LIST.map((section) => {
+      {data?.data?.map((section) => {
         return (
           <Section
             sectionName={section.name}

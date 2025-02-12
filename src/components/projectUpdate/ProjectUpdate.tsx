@@ -1,6 +1,10 @@
 import profileIcon from '@/assets/images/profile.png'
 import { CATEGORY_COLORS } from '@/shared/constants/color'
-import { MEMBER_LIST } from '@/shared/mock/memberList'
+import {
+  useMutationDeleteProject,
+  useMutationUpdateProject,
+} from '@/shared/queries/useMutationProject'
+import { useQueryProject } from '@/shared/queries/useQueryProject'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
@@ -12,16 +16,21 @@ import { z } from 'zod'
 
 const formSchema = z.object({
   title: z.string().min(1),
-  member: z.string().email(),
   color: z.string().min(1),
 })
 
-export default function ProjectUpdate() {
-  const [memberList, setMemberList] = useState(MEMBER_LIST)
+export default function ProjectUpdate({ projectId }: { projectId: number }) {
+  const [memberList, setMemberList] = useState<string[]>([])
+  const [memberInput, setMemberInput] = useState('')
 
   const navigate = useNavigate()
   const location = useLocation()
   const currentProjectPath = location.pathname.split('/').slice(0, 3).join('/')
+
+  const { data } = useQueryProject(projectId)
+  const updateProject = useMutationUpdateProject()
+  const deleteProject = useMutationDeleteProject()
+  const project = data?.data
 
   const {
     register,
@@ -33,25 +42,50 @@ export default function ProjectUpdate() {
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      title: '',
-      member: '',
-      color: '',
+      title: project?.name ?? '',
+      color: project?.color ?? '',
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
+    try {
+      await updateProject.mutateAsync({
+        id: projectId,
+        name: getValues('title'),
+        // color: getValues('color'),
+      })
+    } catch (error) {
+      console.error('Error updating project:', error)
+    }
+  }
+
+  const isValidEmail = (email: string) => {
+    return z.string().email().safeParse(email).success
   }
 
   const addEmail = () => {
-    if (getValues('member') && !memberList.includes(getValues('member'))) {
-      setMemberList([...memberList, getValues('member')])
-      setValue('member', '')
+    if (
+      memberInput &&
+      isValidEmail(memberInput) &&
+      !memberList.includes(memberInput)
+    ) {
+      setMemberList([...memberList, memberInput])
+      setMemberInput('')
     }
   }
 
   const removeEmail = (memberToRemove: string) => {
     setMemberList(memberList.filter((member) => member !== memberToRemove))
+  }
+
+  const onDelete = async () => {
+    try {
+      await deleteProject.mutateAsync({ projectId })
+      navigate(`${currentProjectPath}`)
+    } catch (error) {
+      console.error('Error deleting project:', error)
+    }
   }
 
   return (
@@ -77,16 +111,16 @@ export default function ProjectUpdate() {
             <div className="w-full flex items-center gap-2 md:gap-4">
               <label className="whitespace-pre font-semibold">멤버 초대</label>
               <Input
-                {...register('member')}
+                onChange={(e) => setMemberInput(e.target.value)}
                 placeholder="이메일을 입력하여 프로젝트에 멤버를 추가하세요"
                 className="text-xs md:text-sm placeholder:text-xs placeholder:md:text-sm h-[30px] md:h-10"
               />
             </div>
             <Button
-              className={`${errors.member ? 'bg-modalBorder' : ''} `}
               type="button"
+              className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
               onClick={addEmail}
-              disabled={errors.member !== undefined}
+              disabled={!isValidEmail(memberInput)}
             >
               <Icon icon="Plus" size={10} color="white" />
             </Button>
@@ -136,17 +170,31 @@ export default function ProjectUpdate() {
             </div>
           </div>
         </div>
-
-        <div className="flex gap-3 justify-center">
+        <div className="flex justify-between">
           <Button
-            variant="modalOutline"
-            onClick={() => navigate(`${currentProjectPath}`)}
+            type="button"
+            variant="categoryDelete"
+            className="!py-2 !px-6"
+            onClick={onDelete}
           >
-            취소
+            삭제
           </Button>
-          <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>
-            수정
-          </Button>
+          <div className="flex gap-3 justify-center">
+            <Button
+              type="button"
+              variant="modalOutline"
+              onClick={() => navigate(`${currentProjectPath}`)}
+            >
+              취소
+            </Button>
+            <Button
+              type="submit"
+              variant={isValid ? 'modal' : 'disabled'}
+              onClick={() => navigate(`${currentProjectPath}`)}
+            >
+              수정
+            </Button>
+          </div>
         </div>
       </form>
     </div>

@@ -3,23 +3,41 @@ import { create } from 'zustand'
 
 interface ModalStore {
   activeModals: Record<ModalKey, boolean>
-  openModal: (key: ModalKey) => void
+  modalData: Record<ModalKey, ModalData>
+  openModal: (key: ModalKey, data?: ModalData) => void
   closeModal: (key: ModalKey) => void
+  getModalData: (key: ModalKey) => ModalData | undefined
 }
 
-export const useModalStore = create<ModalStore>((set) => ({
+interface ModalData {
+  sectionName?: string
+  sectionId?: number
+  projectId?: number
+  // 필요한 다른 props들도 여기에 추가 가능
+}
+
+export const useModalStore = create<ModalStore>((set, get) => ({
   activeModals: {
     'create-card': false,
     'create-project': false,
     'create-section': false,
     'update-section': false,
   },
-  openModal: (key) =>
+  modalData: {
+    'create-card': {},
+    'create-project': {},
+    'create-section': {},
+    'update-section': {},
+  },
+  openModal: (key, data) =>
     set((state) => ({
       activeModals: { ...state.activeModals, [key]: true },
+      modalData: { ...state.modalData, [key]: data },
     })),
   closeModal: (key) =>
     set((state) => ({
       activeModals: { ...state.activeModals, [key]: false },
+      modalData: { ...state.modalData, [key]: undefined },
     })),
+  getModalData: (key) => get().modalData[key],
 }))

@@ -1,3 +1,6 @@
+import { useProjectId } from '@/shared/hooks/useProjectId'
+import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
+import { useQuerySectionList } from '@/shared/queries/useQuerySectionList'
 import { Button } from '@/shared/ui/common/button'
 import { Calendar } from '@/shared/ui/common/calendar'
 import {
@@ -28,9 +31,9 @@ const formSchema = z
     content: z.string(),
     startDate: z.date({ required_error: '시작 날짜를 선택하세요' }),
     endDate: z.date({ required_error: '종료 날짜를 선택하세요' }),
-    category: z
-      .string({ required_error: '카테고리를 선택하세요' })
-      .min(1, '카테고리를 선택하세요'),
+    section: z.string().min(1, '섹션 이름을 입력하세요'),
+    // section: z.number({ required_error: '섹션 이름을 입력하세요' }),
+    category: z.string().min(1, '카테고리를 선택하세요'),
   })
   .refine((data) => data.endDate >= data.startDate, {
     message: '종료 날짜는 시작 날짜보다 빠를 수 없습니다.',
@@ -38,6 +41,9 @@ const formSchema = z
   })
 
 export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
+  const { closeModal, getModalData } = useModalStore()
+  const modalData = getModalData('create-card')
+
   const {
     register,
     watch,
@@ -53,13 +59,33 @@ export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
       content: '',
       startDate: undefined,
       endDate: undefined,
+      section: modalData?.sectionName ?? '',
       category: '',
     },
   })
-  const { closeModal } = useModalStore()
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const projectId = useProjectId()
+  const { data: sectionList } = useQuerySectionList(projectId)
+  const { data: categoryList } = useQueryCategoryList(projectId)
+
+  // const createCard = useMutationCreateCard()
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // console.log(values)
+    console.log(
+      sectionList?.data?.find((section) => section.name === values.section)?.id,
+    )
+    // try {
+    //   await createCard.mutateAsync({
+    //     projectId
+    //     sectionId: sectionList?.data?.find((section) => section.name === values.section)?.id
+    //     categoryId: categoryList?.data?.find((category) => category.name === values.category)?.id
+    //     title: string
+    //     content: string | undefined
+    //     startDate: Date | undefined
+    //     endDate: Date | undefined
+    //   })
+    // }
     closeModal('create-card')
   }
 
@@ -147,33 +173,58 @@ export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
                 </Popover>
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-3 md:gap-4">
-                <label className="whitespace-pre">카테고리</label>
-                <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
-                  <Select
-                    onValueChange={(value) =>
-                      setValue('category', value, { shouldValidate: true })
-                    }
-                    value={watch('category')}
-                  >
-                    <div>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder="카테고리를 선택하세요"
-                          className="placeholder:text-modalPlaceholder"
-                        />
-                      </SelectTrigger>
-                    </div>
-                    <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="board">Board</SelectItem>
-                      <SelectItem value="comment">Comment</SelectItem>
-                      <SelectItem value="ci-cd">CI/CD</SelectItem>
-                      <SelectItem value="design">Design</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+            <div className="flex items-center gap-3 md:gap-4">
+              <label className="whitespace-pre">섹션</label>
+              <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
+                <Select
+                  onValueChange={(value) =>
+                    setValue('section', value, { shouldValidate: true })
+                  }
+                  value={watch('section')}
+                >
+                  <div>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="섹션을 선택하세요"
+                        className="placeholder:text-modalPlaceholder"
+                      />
+                    </SelectTrigger>
+                  </div>
+                  <SelectContent>
+                    {sectionList?.data?.map((section) => (
+                      <SelectItem key={section.id} value={section.name}>
+                        {section.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 md:gap-4">
+              <label className="whitespace-pre">카테고리</label>
+              <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
+                <Select
+                  onValueChange={(value) =>
+                    setValue('category', value, { shouldValidate: true })
+                  }
+                  value={watch('category')}
+                >
+                  <div>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="카테고리를 선택하세요"
+                        className="placeholder:text-modalPlaceholder"
+                      />
+                    </SelectTrigger>
+                  </div>
+                  <SelectContent>
+                    {categoryList?.data?.map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

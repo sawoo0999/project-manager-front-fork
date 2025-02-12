@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import animate from 'tailwindcss-animate'
 import { fontFamily } from 'tailwindcss/defaultTheme'
-import { CATEGORY_COLORS } from './src/shared/constants/color'
 
 export default {
   darkMode: ['class'],
@@ -30,7 +29,6 @@ export default {
         cardDate: '#757575',
         primary: '#82CD47',
         warning: '#FF0004',
-        category: { ...CATEGORY_COLORS },
 
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

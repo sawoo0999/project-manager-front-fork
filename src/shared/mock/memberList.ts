@@ -1,4 +1,4 @@
-export const MEMBER_LIST = [
+export const MOCK_MEMBER_LIST = [
   'cynthia9298@gamil.com',
   'yeonna18k@gamil.com',
   'yeonna18k@naver.com',

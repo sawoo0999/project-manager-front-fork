@@ -46,7 +46,7 @@ export default function Section({ sectionName, sectionId }: SectionProps) {
         })}
         <div
           className="w-full h-[81px] bg-white flex justify-center items-center cursor-pointer rounded-card"
-          onClick={() => openModal('create-card')}
+          onClick={() => openModal('create-card', { sectionName })}
         >
           <Icon icon="Plus" size={14} />
         </div>

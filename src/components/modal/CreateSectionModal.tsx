@@ -1,7 +1,9 @@
+import { useMutationCreateSection } from '@/shared/queries/useMutationSection'
 import { Button } from '@/shared/ui/common/button'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 import { Input } from '../../shared/ui/common/input'
 import { ModalKey } from './ModalController'
@@ -23,10 +25,19 @@ export default function CreateSectionModal({ modalId }: { modalId: ModalKey }) {
     },
   })
 
+  const { projectId } = useParams()
   const { closeModal } = useModalStore()
+  const createSection = useMutationCreateSection()
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await createSection.mutateAsync({
+        projectId: projectId,
+        name: values.title,
+      })
+    } catch (error) {
+      console.error(error)
+    }
     closeModal('create-section')
   }
 
