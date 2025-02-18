@@ -1,19 +1,16 @@
 import { format, parseISO } from 'date-fns'
-
 import { Input } from '@/shared/ui/common/input'
 import { Comment } from '@/shared/mock/cardDetail'
 
 interface CommentSectionProps {
   comments: Comment[]
-  mode?: 'view' | 'edit' | 'complete'
+  completeDate: string | null
 }
 
 export default function CommentSection({
   comments,
-  mode = 'view',
+  completeDate,
 }: CommentSectionProps) {
-  const isComplete = mode === 'complete'
-
   const formatDate = (dateString: string) => {
     const date = parseISO(dateString)
     return format(date, 'M월 d일')
@@ -40,7 +37,7 @@ export default function CommentSection({
         ))}
       </div>
       {/* 댓글 입력 - 완료 상태가 아닐 때만 표시 */}
-      {!isComplete && (
+      {!completeDate && (
         <div className="flex gap-3 pt-2">
           <div className="w-8 h-8 bg-primary rounded-full flex-shrink-0" />
           <Input

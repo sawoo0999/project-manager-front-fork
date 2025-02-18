@@ -5,29 +5,19 @@ export interface Comment {
   date: string
 }
 
-export interface CardData {
+export const MOCK_CARD_DETAIL = {
   data: {
-    id: string
-    title: string
-    content: string
-    startDate: string
-    endDate: string
-    completeDate: string | null
-    category: string
-  }
-  comments: Comment[]
-}
-
-export const MOCK_CARD_DETAIL: CardData = {
-  data: {
-    id: 'card-001',
+    id: 1,
     title: '회원가입 기능 구현',
     content:
       '회원가입시 DB에 저장\n활용 기술: Json Web Token & Spring Security',
     startDate: '2024-01-10',
     endDate: '2024-01-24',
     completeDate: null,
-    category: 'Backend',
+    categoryColor: '#4E77E0', // Blue color for Backend category
+    categoryName: 'Backend',
+    nickName: '김나연',
+    photoUrl: 'https://example.com/profile/user1.jpg',
   },
   comments: [
     {
@@ -49,15 +39,4 @@ export const MOCK_CARD_DETAIL: CardData = {
       date: '2024-01-17',
     },
   ],
-}
-
-export const ADDITIONAL_DATA = {
-  assignee: {
-    name: '김나연',
-    email: 'yeonna18k@gmail.com',
-  },
-  project: {
-    name: 'Project Manager',
-    category: 'Frontend',
-  },
 }

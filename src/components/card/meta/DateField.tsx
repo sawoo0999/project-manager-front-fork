@@ -1,53 +1,47 @@
-// src/components/card/meta/DateField.tsx
 import { type DateRange } from 'react-day-picker'
 import { Icon } from '@/shared/ui/Icon'
+import { format } from 'date-fns'
 
-import DateRangePicker from '../CardCalendar'
 import MetaInfoField from './MetaInfo'
+import DateRangePicker from './CardCalendar'
 
-// 기본 공통 props
-interface BaseDateFieldProps {
+interface DateFieldProps {
+  isEdit: boolean
+  displayEndDate: string
   startDate?: Date
   endDate?: Date
-  displayStartDate: string
-  displayEndDate: string
+  onRangeSelect?: (range: DateRange | undefined) => void
 }
 
-// 보기 모드 props
-interface ViewDateFieldProps extends BaseDateFieldProps {
-  isEdit: false
-  onRangeSelect?: never
-}
-
-// 수정 모드 props
-interface EditDateFieldProps extends BaseDateFieldProps {
-  isEdit: true
-  onRangeSelect: (range: DateRange | undefined) => void
-}
-
-type DateFieldProps = ViewDateFieldProps | EditDateFieldProps
-
-export function DateField(props: DateFieldProps) {
-  const { startDate, endDate, displayStartDate, displayEndDate, isEdit } = props
+export function DateField({
+  isEdit,
+  displayEndDate,
+  startDate,
+  endDate,
+  onRangeSelect,
+}: DateFieldProps) {
+  const safeStartDate = startDate
+    ? new Date(startDate.toISOString().split('T')[0])
+    : new Date()
+  const safeEndDate = endDate
+    ? new Date(endDate.toISOString().split('T')[0])
+    : new Date()
 
   return (
     <MetaInfoField label="마감일">
       {isEdit ? (
         <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          onRangeSelect={props.onRangeSelect}
+          startDate={safeStartDate}
+          endDate={safeEndDate}
+          onRangeSelect={onRangeSelect ?? (() => {})}
         />
       ) : (
         <>
-          <Icon
-            icon="Calendar"
-            size={20}
-            className="sm:w-6 md:w-7 sm:h-6 md:h-7"
-            color="gray"
-          />
+          <Icon icon="Calendar" size={20} />
           <span className="text-xs text-cardDate">
-            {displayStartDate} ~ {displayEndDate}
+            {displayEndDate
+              ? format(new Date(displayEndDate), 'M월 d일')
+              : '날짜 없음'}
           </span>
         </>
       )}
