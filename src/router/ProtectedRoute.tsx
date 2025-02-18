@@ -1,7 +1,7 @@
-import { Navigate, useLocation } from 'react-router-dom'
 import { useIsAuthenticated } from '@/store/useSessionStore'
+import { Navigate, useLocation } from 'react-router-dom'
 
-interface ProtectedRouteProps {
+export interface ProtectedRouteProps {
   children: React.ReactNode
 }
 

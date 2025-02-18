@@ -21,18 +21,22 @@ export default function Section({
   const { openModal } = useModalStore()
   const { data: cardList } = useQueryCardList(projectId)
 
+  const filteredCardList = cardList?.data?.filter(
+    (card) => card.sectionId === sectionId,
+  )
+
   const location = useLocation()
   const currentPath = location.pathname
 
   return (
-    <div className="w-[307px] mx-auto md:mx-0 px-3 md:w-[220px]  md:px-0 lg:w-[256px] pt-2 flex flex-col gap-2 shrink-0">
+    <div className="h-fit w-[307px] mx-auto md:mx-0 px-3 md:w-[220px] md:px-0 md:pb-3 lg:w-[256px] pt-2 flex flex-col gap-2 shrink-0">
       <Link
         to={`${currentPath}/section/${sectionId}`}
         className="font-semibold text-sm md:text-base flex justify-between items-center"
       >
         {sectionName}
         <Icon
-          className="md:hidden cursor-pointer"
+          className={`${filteredCardList?.length === 0 && 'hidden'} md:hidden cursor-pointer`}
           icon={isOpen ? 'AngleDoubleUp' : 'AngleDoubleDown'}
           size={20}
           onClick={(e: React.MouseEvent<SVGSVGElement>) => {
@@ -47,11 +51,9 @@ export default function Section({
           isOpen ? 'max-h-[1000px] slide-down' : 'max-h-[89px] slide-up'
         }`}
       >
-        {cardList?.data
-          ?.filter((card) => card.sectionId === sectionId)
-          .map((card) => {
-            return <Card key={card.cardId} projectId={projectId} {...card} />
-          })}
+        {filteredCardList?.map((card) => {
+          return <Card key={card.cardId} projectId={projectId} {...card} />
+        })}
         <div
           className="w-full h-[81px] bg-white flex justify-center items-center cursor-pointer rounded-card"
           onClick={() => openModal('create-card', { sectionName })}

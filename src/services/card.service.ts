@@ -8,7 +8,6 @@ export interface FormData {
   endDate: Date | undefined
   categoryId: number
 }
-
 export interface Card {
   cardId: number
   sectionId: number

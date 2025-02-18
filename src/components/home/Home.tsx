@@ -1,10 +1,10 @@
+import {
+  MOCK_COMPLETED_TASKS,
+  MOCK_PROGRESS_TASKS,
+  MOCK_USER,
+} from '@/shared/mock/task'
 import { useState } from 'react'
 import TaskList from './TaskList'
-import {
-  MOCK_USER,
-  MOCK_PROGRESS_TASKS,
-  MOCK_COMPLETED_TASKS,
-} from '@/shared/mock/task'
 export default function HomePage() {
   const [inProgressPage, setInProgressPage] = useState(1)
   const [completedPage, setCompletedPage] = useState(1)
@@ -32,7 +32,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="w-full bg-white rounded-l-lg min-h-screen flex">
+    <div className="w-full bg-white rounded-l-lg flex">
       <div className="flex flex-col items-center py-10 gap-14  px-4 sm:px-2 w-full">
         {/* Header */}
         <div className="text-center text-base">

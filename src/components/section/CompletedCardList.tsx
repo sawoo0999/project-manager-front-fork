@@ -11,7 +11,7 @@ export default function CompletedCardList({
   sectionCardList: APIResponse<SectionCardProps[]>
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 lg:min-w-[704px] ">
       <div className="font-semibold text-sm md:text-base pt-2">완료</div>
       <div className="flex flex-col gap-2">
         <div>

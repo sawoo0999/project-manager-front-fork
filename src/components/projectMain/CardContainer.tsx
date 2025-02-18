@@ -13,7 +13,7 @@ export default function CardContainer({ projectId }: { projectId: number }) {
   }
 
   return (
-    <div className="bg-bodyBg flex-1 md:flex md:px-3 md:gap-3 md:overflow-x-auto">
+    <div className="bg-bodyBg flex-1 md:flex md:px-3 md:gap-3 overflow-auto">
       {sectionList?.data?.map((section) => {
         return (
           <Section

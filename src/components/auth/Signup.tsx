@@ -1,10 +1,13 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
-import { postSignup } from '@/services/auth.service'
 import logoIcon from '@/assets/images/logo-text.png'
+import { postSignup } from '@/services/auth.service'
+import { useMutation } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
+import { cn } from '@/shared/lib/utils'
+import { Icon } from '@/shared/ui/Icon'
+import { Button } from '@/shared/ui/common/button'
 import {
   Form,
   FormControl,
@@ -13,13 +16,10 @@ import {
   FormMessage,
 } from '@/shared/ui/common/form'
 import { Input } from '@/shared/ui/common/input'
-import axios from 'axios'
-import { cn } from '@/shared/lib/utils'
-import { Link } from 'react-router-dom'
-import { Icon } from '@/shared/ui/Icon'
-import { Button } from '@/shared/ui/common/button'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { signUpSchema } from '@/utils/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 interface SignUpFormData {
   email: string
@@ -70,161 +70,155 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full min-h-screen bg-white">
-      <div className="flex flex-col items-center sm:p-10 p-6 gap-4 sm:w-[520px] w-[300px] bg-white border sm:border-modalBorder sm:rounded-modal">
-        <img
-          src={logoIcon}
-          alt="Project Manager 2025"
-          className="sm:w-[300px] w-[200px] h-auto"
-        />
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      className={cn(
-                        form.formState.errors.email &&
-                          'border-warning focus:border-warning',
-                      )}
-                      placeholder="이메일을 입력하세요"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nickname"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      className={cn(
-                        form.formState.errors.nickname &&
-                          'border-warning focus:border-warning',
-                      )}
-                      placeholder="닉네임을 입력하세요"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="relative">
-                    <FormControl>
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        className={cn(
-                          form.formState.errors.password &&
-                            'border-warning focus:border-warning',
-                        )}
-                        placeholder="비밀번호를 입력하세요"
-                        {...field}
-                      />
-                    </FormControl>
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2"
-                      aria-label={
-                        showPassword ? '비밀번호 숨기기' : '비밀번호 보기'
-                      }
-                    >
-                      <Icon
-                        icon={showPassword ? 'Eye' : 'EyeClosed'}
-                        size={20}
-                        className="opacity-20 sm:w-5 sm:h-5 w-4 h-4"
-                      />
-                    </button>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="passwordConfirm"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="relative">
-                    <FormControl>
-                      <Input
-                        type={showPasswordConfirm ? 'text' : 'password'}
-                        className={cn(
-                          form.formState.errors.passwordConfirm &&
-                            'border-warning focus:border-warning',
-                        )}
-                        placeholder="비밀번호를 다시 입력하세요"
-                        {...field}
-                      />
-                    </FormControl>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowPasswordConfirm(!showPasswordConfirm)
-                      }
-                      className="absolute right-4 top-1/2 -translate-y-1/2"
-                      aria-label={
-                        showPasswordConfirm
-                          ? '비밀번호 숨기기'
-                          : '비밀번호 보기'
-                      }
-                    >
-                      <Icon
-                        icon={showPasswordConfirm ? 'Eye' : 'EyeClosed'}
-                        size={20}
-                        className="opacity-20 sm:w-5 sm:h-5 w-4 h-4"
-                      />
-                    </button>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {form.formState.errors.root && (
-              <p className="text-warning border-warning text-sm">
-                {form.formState.errors.root.message}
-              </p>
+    <div className="flex flex-col items-center sm:p-10 p-6 gap-4 sm:w-[520px] w-[300px] bg-white border sm:border-modalBorder sm:rounded-modal">
+      <img
+        src={logoIcon}
+        alt="Project Manager 2025"
+        className="sm:w-[300px] w-[200px] h-auto"
+      />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-4"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="email"
+                    className={cn(
+                      form.formState.errors.email &&
+                        'border-warning focus:border-warning',
+                    )}
+                    placeholder="이메일을 입력하세요"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            <div className="flex justify-end items-center mt-4">
-              <span className="text-sm text-modalPlaceholder">
-                이미 계정이 있습니다{' '}
-                <Link to="/login" className="text-primary font-medium">
-                  로그인하기
-                </Link>
-              </span>
-            </div>
-            <Button
-              type="submit"
-              disabled={signupMutation.isPending}
-              className="w-full disabled:opacity-50"
-            >
-              {signupMutation.isPending ? '가입 중...' : '회원가입'}
-            </Button>
-          </form>
-        </Form>
-      </div>
+          />
+
+          <FormField
+            control={form.control}
+            name="nickname"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    className={cn(
+                      form.formState.errors.nickname &&
+                        'border-warning focus:border-warning',
+                    )}
+                    placeholder="닉네임을 입력하세요"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      className={cn(
+                        form.formState.errors.password &&
+                          'border-warning focus:border-warning',
+                      )}
+                      placeholder="비밀번호를 입력하세요"
+                      {...field}
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2"
+                    aria-label={
+                      showPassword ? '비밀번호 숨기기' : '비밀번호 보기'
+                    }
+                  >
+                    <Icon
+                      icon={showPassword ? 'Eye' : 'EyeClosed'}
+                      size={20}
+                      className="opacity-20 sm:w-5 sm:h-5 w-4 h-4"
+                    />
+                  </button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="passwordConfirm"
+            render={({ field }) => (
+              <FormItem>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPasswordConfirm ? 'text' : 'password'}
+                      className={cn(
+                        form.formState.errors.passwordConfirm &&
+                          'border-warning focus:border-warning',
+                      )}
+                      placeholder="비밀번호를 다시 입력하세요"
+                      {...field}
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2"
+                    aria-label={
+                      showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'
+                    }
+                  >
+                    <Icon
+                      icon={showPasswordConfirm ? 'Eye' : 'EyeClosed'}
+                      size={20}
+                      className="opacity-20 sm:w-5 sm:h-5 w-4 h-4"
+                    />
+                  </button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {form.formState.errors.root && (
+            <p className="text-warning border-warning text-sm">
+              {form.formState.errors.root.message}
+            </p>
+          )}
+          <div className="flex justify-end items-center mt-4">
+            <span className="text-sm text-modalPlaceholder">
+              이미 계정이 있습니다{' '}
+              <Link to="/login" className="text-primary font-medium">
+                로그인하기
+              </Link>
+            </span>
+          </div>
+          <Button
+            type="submit"
+            disabled={signupMutation.isPending}
+            className="w-full disabled:opacity-50"
+          >
+            {signupMutation.isPending ? '가입 중...' : '회원가입'}
+          </Button>
+        </form>
+      </Form>
     </div>
   )
 }

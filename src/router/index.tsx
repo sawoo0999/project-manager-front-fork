@@ -3,29 +3,42 @@ import { createBrowserRouter } from 'react-router-dom'
 import LoginPage from '@/components/auth/Login'
 import SignupPage from '@/components/auth/Signup'
 
+
 import CategoryContainer from '@/components/category/CategoryContainer'
 import HomePage from '@/components/home/Home'
 import NotificationPage from '@/components/inbox/NotificationPage'
+import LandingContainer from '@/components/landing/LandingContainer'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
 import ProjectUpdateContainer from '@/components/projectUpdate/ProjectUpdateContainer'
 import SectionContainer from '@/components/section/SectionContainer'
 import { AuthLayout, LandingLayout, MainLayout } from '@/layout/index'
+import ProtectedRoute from './ProtectedRoute'
+import PublicRoute from './PublicRoute'
 import CardDetailContainer from '@/components/card/CardDetailContainer'
+
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingLayout />,
+    element: (
+      <PublicRoute>
+        <LandingLayout />
+      </PublicRoute>
+    ),
     children: [
       {
         index: true,
-        element: <div>랜딩 페이지</div>,
+        element: <LandingContainer />,
       },
     ],
   },
   {
     path: '/',
-    element: <AuthLayout />,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
       {
         path: 'login',
@@ -39,7 +52,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: 'home',

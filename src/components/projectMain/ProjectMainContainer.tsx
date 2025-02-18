@@ -10,7 +10,7 @@ export default function ProjectMainContainer() {
 
   if (project?.data)
     return (
-      <section className="h-full w-full flex flex-col overflow-x-scroll">
+      <section className="h-full w-full flex flex-col">
         <ProjectHeader {...project?.data} />
         <SettingMenuBar page="project" projectId={projectId} />
         <CardContainer projectId={projectId} />

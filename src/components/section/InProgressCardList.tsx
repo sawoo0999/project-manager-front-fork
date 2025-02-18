@@ -22,7 +22,7 @@ export default function InProgressCardList({
   const { data: section } = useQuerySection({ projectId, sectionId })
 
   return (
-    <div className="lg:w-[256px] flex flex-col gap-2">
+    <div className="lg:min-w-[256px] flex flex-col gap-2">
       <div className="font-semibold text-sm md:text-base flex justify-between items-center pt-2 ">
         진행 중
         <Icon
