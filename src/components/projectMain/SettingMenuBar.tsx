@@ -52,7 +52,12 @@ export default function SettingMenuBar({ page, projectId }: PageProps) {
           variant={sectionList?.data?.length === 0 ? 'disabled' : 'default'}
           disabled={sectionList?.data?.length === 0}
           className="flex gap-0.5 px-2"
-          onClick={() => openModal('create-card')}
+          onClick={() =>
+            openModal(
+              'create-card',
+              page === 'section' ? { sectionName: section?.name } : undefined,
+            )
+          }
         >
           <Icon icon="Plus" className="w-3 h-3 md:w-2.5 md:h-2.5" />
           <span className="hidden md:block">카드 추가</span>

@@ -1,10 +1,11 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom'
 import logoText from '@/assets/images/logo-text.png'
-import useSessionStore from '@/store/useSessionStore'
 import { postLogout } from '@/services/auth.service'
+import useSessionStore from '@/store/useSessionStore'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 
 export default function LandingLayout() {
   const { access_token } = useSessionStore.getState()
+  console.log(access_token)
   const logout = useSessionStore((state) => state.logout)
   const navigate = useNavigate()
   const handleLogout = async () => {

@@ -2,6 +2,10 @@ import {
   CATEGORY_COLORS,
   UppercaseCategoryColor,
 } from '@/shared/constants/color'
+import {
+  useMutationDeleteCategory,
+  useMutationUpdateCategory,
+} from '@/shared/queries/useMutationCategory'
 import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
@@ -39,11 +43,29 @@ export default function CategoryList({ projectId }: { projectId: number }) {
   const [editColor, setEditColor] = useState(false)
 
   const { data: categoryList } = useQueryCategoryList(projectId)
-  console.log('categoryList', projectId)
+  const updateCategory = useMutationUpdateCategory()
+  const deleteCategory = useMutationDeleteCategory()
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onUpdate = async (values: z.infer<typeof formSchema>) => {
+    console.log(editingId)
     console.log(values)
+    try {
+      await updateCategory.mutateAsync({
+        categoryId: editingId as number,
+        name: values.name,
+        description: values.description,
+        color: values.color,
+      })
+    } catch (error) {
+      console.error(error)
+    }
     setEditingId(null)
+  }
+
+  const onDelete = async () => {
+    await deleteCategory.mutateAsync({
+      categoryId: editingId as number,
+    })
   }
 
   return (
@@ -60,12 +82,12 @@ export default function CategoryList({ projectId }: { projectId: number }) {
         </div>
       </div>
       {categoryList?.data?.map((category) => {
-        const isEditing = editingId === (category.id as unknown as number)
+        const isEditing = editingId === Number(category.id)
         return (
           <form
             key={category.id}
             className="h-10 md:h-[45px] border-b border-bodyBorder flex items-center w-fit mx-auto"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onUpdate)}
           >
             <div className="w-[38px] md:w-[46px] lg:w-[92px] flex items-center lg:gap-1">
               {isEditing ? (
@@ -147,6 +169,7 @@ export default function CategoryList({ projectId }: { projectId: number }) {
                     type="button"
                     variant="categoryDelete"
                     className="p-1 md:p-2 group"
+                    onClick={onDelete}
                   >
                     <Icon
                       icon="Delete"

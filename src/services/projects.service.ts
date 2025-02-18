@@ -13,7 +13,7 @@ export interface CreateProjectRequest {
 export interface UpdateProjectRequest {
   id: number
   name: string
-  // color: string
+  color: string
 }
 
 export interface GetProjectRequest {
@@ -29,20 +29,20 @@ export interface Project {
 export const createProject = async (
   payload: CreateProjectRequest,
 ): Promise<Project> => {
-  const { data } = await axiosApi.post(`/projects`, payload)
+  const { data } = await axiosApi.post(`projects`, payload)
   return data
 }
 
 export const updateProject = async ({
   id,
-  // color,
+  color,
   name,
 }: UpdateProjectRequest) => {
-  const response = await axiosApi.put(`/projects/${id}`, { name })
+  const response = await axiosApi.put(`/projects/${id}`, { name, color })
   return response.data
 }
 
 export const deleteProject = async ({ projectId }: GetProjectRequest) => {
-  const response = await axiosApi.delete(`/projects/${projectId}`)
+  const response = await axiosApi.delete(`projects/${projectId}`)
   return response.data
 }

@@ -1,13 +1,25 @@
-import { MOCK_CARD_LIST } from '@/shared/mock/card'
+import { Card as SectionCardProps } from '@/services/card.service'
+import { useQuerySection } from '@/shared/queries/useQuerySection'
+import { APIResponse } from '@/shared/types/response'
 import Card from '@/shared/ui/Card'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import { useState } from 'react'
 
-export default function InProgressCardList() {
+export default function InProgressCardList({
+  projectId,
+  sectionId,
+  sectionCardList,
+}: {
+  projectId: number
+  sectionId: number
+  sectionCardList: APIResponse<SectionCardProps[]>
+}) {
   const [isOpen, setIsOpen] = useState(false)
 
   const { openModal } = useModalStore()
+
+  const { data: section } = useQuerySection({ projectId, sectionId })
 
   return (
     <div className="lg:w-[256px] flex flex-col gap-2">
@@ -25,12 +37,16 @@ export default function InProgressCardList() {
           isOpen ? 'max-h-[1000px] slide-down' : 'max-h-[89px] slide-up'
         }`}
       >
-        {MOCK_CARD_LIST.map((card, index) => {
-          return <Card {...card} key={`${card.title}-${index}`} />
-        })}
+        {sectionCardList?.data
+          ?.filter((card) => card.completeDate === null)
+          .map((card) => {
+            return <Card key={card.cardId} projectId={projectId} {...card} />
+          })}
         <div
           className="w-full h-[81px] bg-white flex justify-center items-center cursor-pointer rounded-card"
-          onClick={() => openModal('create-card')}
+          onClick={() =>
+            openModal('create-card', { sectionName: section?.name })
+          }
         >
           <Icon icon="Plus" size={14} />
         </div>

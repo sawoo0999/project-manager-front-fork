@@ -3,6 +3,7 @@ import {
   CATEGORY_COLORS,
   UppercaseCategoryColor,
 } from '@/shared/constants/color'
+import { useMutationInviteProject } from '@/shared/queries/useMutationInviteProject'
 import { useMutationCreateProject } from '@/shared/queries/useMutationProject'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
@@ -38,14 +39,13 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
       color: 'BLUE',
     },
   })
+  const [memberList, setMemberList] = useState<string[]>([])
+  const [memberInput, setMemberInput] = useState('')
 
   const { closeModal } = useModalStore()
 
   const createProject = useMutationCreateProject()
-  // const inviteProject = useMutationInviteProject()
-
-  const [memberList, setMemberList] = useState<string[]>([])
-  const [memberInput, setMemberInput] = useState('')
+  const inviteProject = useMutationInviteProject()
 
   const isValidEmail = (email: string) => {
     return z.string().email().safeParse(email).success
@@ -53,10 +53,16 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await createProject.mutateAsync({
+      const result = await createProject.mutateAsync({
         name: values.name,
         color: values.color,
       })
+      if (memberList.length > 0) {
+        await inviteProject.mutateAsync({
+          projectId: result.id,
+          email: memberList,
+        })
+      }
       closeModal('create-project')
     } catch (error) {
       console.error(error)
@@ -97,6 +103,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
                 {...register('name')}
                 placeholder="프로젝트의 이름을 입력하세요"
                 className={`flex-1 ${errors.name ? 'border-warning' : ''} text-xs md:text-sm h-10`}
+                autoFocus
               />
             </div>
 
@@ -173,7 +180,11 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
           </div>
 
           <div className="flex gap-3 justify-end">
-            <Button variant="modalOutline" onClick={() => closeModal(modalId)}>
+            <Button
+              type="button"
+              variant="modalOutline"
+              onClick={() => closeModal(modalId)}
+            >
               취소
             </Button>
             <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>

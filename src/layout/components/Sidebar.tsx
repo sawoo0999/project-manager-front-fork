@@ -77,7 +77,7 @@ export default function Sidebar() {
             </span>
           </div>
           {/* api 적용할때 반복문으로 수정 */}
-          <div className="space-y-2">
+          <div className="">
             {data?.data?.map((project) => {
               return (
                 <Link

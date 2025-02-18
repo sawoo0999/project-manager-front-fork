@@ -56,13 +56,20 @@ export default function CreateSectionModal({ modalId }: { modalId: ModalKey }) {
               placeholder="제목을 입력하세요"
               {...register('title')}
               className={`${errors.title ? 'border-warning' : ''} `}
+              autoFocus
             />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button variant="modalOutline" onClick={() => closeModal(modalId)}>
+            <Button
+              type="button"
+              variant="modalOutline"
+              onClick={() => closeModal(modalId)}
+            >
               취소
             </Button>
-            <Button variant={`${isValid ? 'modal' : 'disabled'}`}>생성</Button>
+            <Button type="submit" variant={`${isValid ? 'modal' : 'disabled'}`}>
+              생성
+            </Button>
           </div>
         </form>
       </div>

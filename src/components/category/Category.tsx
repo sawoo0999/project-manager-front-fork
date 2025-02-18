@@ -2,7 +2,7 @@ import {
   CATEGORY_COLORS,
   UppercaseCategoryColor,
 } from '@/shared/constants/color'
-import { useMutationCreateCategory } from '@/shared/queries/useMutationCreateCategory'
+import { useMutationCreateCategory } from '@/shared/queries/useMutationCategory'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
@@ -48,8 +48,11 @@ export default function Category({ projectId }: { projectId: number }) {
       })
     } catch (error) {
       console.error('Error creating category:', error)
+    } finally {
+      setValue('name', '')
+      setValue('description', '')
+      setValue('color', 'BLUE')
     }
-    // console.log(values)
   }
 
   const [isOpenColor, setIsOpenColor] = useState(false)

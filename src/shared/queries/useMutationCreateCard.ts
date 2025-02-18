@@ -9,7 +9,7 @@ const useMutationCreateCard = () => {
   return useMutation<APIResponse<null>, Error, CreateCardRequest>({
     mutationFn: createCard,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.cards.lists() })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.cards.all })
     },
     onError: (error) => {
       console.error('Error creating card:', error)

@@ -1,4 +1,4 @@
-import { MOCK_CARD_LIST } from '@/shared/mock/card'
+import { useQueryCardList } from '@/shared/queries/useQueryCardList'
 import Card from '@/shared/ui/Card'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
@@ -8,12 +8,18 @@ import { Link, useLocation } from 'react-router-dom'
 interface SectionProps {
   sectionName: string
   sectionId: number
+  projectId: number
 }
 
-export default function Section({ sectionName, sectionId }: SectionProps) {
+export default function Section({
+  sectionName,
+  sectionId,
+  projectId,
+}: SectionProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const { openModal } = useModalStore()
+  const { data: cardList } = useQueryCardList(projectId)
 
   const location = useLocation()
   const currentPath = location.pathname
@@ -41,9 +47,11 @@ export default function Section({ sectionName, sectionId }: SectionProps) {
           isOpen ? 'max-h-[1000px] slide-down' : 'max-h-[89px] slide-up'
         }`}
       >
-        {MOCK_CARD_LIST.map((card, index) => {
-          return <Card key={`${card.title}-${index}`} {...card} />
-        })}
+        {cardList?.data
+          ?.filter((card) => card.sectionId === sectionId)
+          .map((card) => {
+            return <Card key={card.cardId} projectId={projectId} {...card} />
+          })}
         <div
           className="w-full h-[81px] bg-white flex justify-center items-center cursor-pointer rounded-card"
           onClick={() => openModal('create-card', { sectionName })}

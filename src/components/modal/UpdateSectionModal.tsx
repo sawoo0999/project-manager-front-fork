@@ -1,4 +1,7 @@
-import { useMutationDeleteSection } from '@/shared/queries/useMutationSection'
+import {
+  useMutationDeleteSection,
+  useMutationUpdateSection,
+} from '@/shared/queries/useMutationSection'
 import { Button } from '@/shared/ui/common/button'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,9 +18,9 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
   const { closeModal, getModalData } = useModalStore()
   const modalData = getModalData('update-section')
 
+  const updateSection = useMutationUpdateSection()
   const deleteSection = useMutationDeleteSection()
 
-  console.log(modalData?.projectId)
   const {
     register,
     handleSubmit,
@@ -30,9 +33,19 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    closeModal('update-section')
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      if (modalData?.projectId && modalData?.sectionId) {
+        await updateSection.mutateAsync({
+          projectId: modalData?.projectId,
+          sectionId: modalData?.sectionId,
+          name: values.title,
+        })
+      }
+      closeModal('update-section')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const onDelete = async () => {
@@ -41,7 +54,6 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
       sectionId: modalData?.sectionId,
       projectId: modalData?.projectId,
     })
-    console.log('섹션 삭제 완료', modalData)
   }
 
   return (
@@ -59,6 +71,7 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
               placeholder="제목을 입력하세요"
               {...register('title')}
               className={`${errors.title ? 'border-warning' : ''} `}
+              autoFocus
             />
           </div>
           <div className="flex justify-between">
@@ -72,12 +85,16 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
             </Button>
             <div className="flex gap-3 justify-end">
               <Button
+                type="button"
                 variant="modalOutline"
                 onClick={() => closeModal(modalId)}
               >
                 취소
               </Button>
-              <Button variant={`${isValid ? 'modal' : 'disabled'}`}>
+              <Button
+                type="submit"
+                variant={`${isValid ? 'modal' : 'disabled'}`}
+              >
                 수정
               </Button>
             </div>

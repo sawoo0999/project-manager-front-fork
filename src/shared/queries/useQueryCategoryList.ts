@@ -8,9 +8,7 @@ const useQueryCategoryList = (projectId: number) => {
   const { data, isError } = useQuery<APIResponse<Category[]>>({
     queryKey: QUERY_KEYS.categories.lists(projectId),
     queryFn: async () => {
-      const { data } = await axiosApi.get('/categories', {
-        params: { projectId },
-      })
+      const { data } = await axiosApi.get(`projects/${projectId}/categories`)
       return data
     },
     retry: false,

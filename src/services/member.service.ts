@@ -1,19 +1,14 @@
 import axiosApi from '@/helper/api_helper'
-import { APIResponse } from '@/shared/types/response'
 
 export interface InviteProjectRequest {
   projectId: number
+  email: string[]
 }
 
-export const inviteProject = async (payload: InviteProjectRequest) => {
-  try {
-    const response = (await axiosApi.post(
-      '/api/projects/invite',
-      payload,
-    )) as APIResponse<null>
-    return response
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+export const inviteProject = async ({
+  projectId,
+  email,
+}: InviteProjectRequest) => {
+  const response = await axiosApi.post(`projects/invite/${projectId}`, email)
+  return response.data
 }

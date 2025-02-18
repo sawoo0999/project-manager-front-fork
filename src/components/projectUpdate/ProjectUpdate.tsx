@@ -1,10 +1,12 @@
 import profileIcon from '@/assets/images/profile.png'
-import { CATEGORY_COLORS } from '@/shared/constants/color'
+import {
+  CATEGORY_COLORS,
+  UppercaseCategoryColor,
+} from '@/shared/constants/color'
 import {
   useMutationDeleteProject,
   useMutationUpdateProject,
 } from '@/shared/queries/useMutationProject'
-import { useQueryProject } from '@/shared/queries/useQueryProject'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
@@ -13,24 +15,29 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import { ProjectProps } from '../projectMain/ProjectHeader'
 
 const formSchema = z.object({
   title: z.string().min(1),
   color: z.string().min(1),
 })
 
-export default function ProjectUpdate({ projectId }: { projectId: number }) {
+export default function ProjectUpdate({
+  id: projectId,
+  name,
+  color,
+}: ProjectProps) {
   const [memberList, setMemberList] = useState<string[]>([])
+  const [deleteMemberList, setDeleteMemberList] = useState<string[]>([])
   const [memberInput, setMemberInput] = useState('')
+  // TODO: 1) 프로젝트 별 멤버 조회 후 상태 set 2) 멤버리스트 상태와 비교 3) 삭제된 멤버 프로젝트에서 제거 API
 
   const navigate = useNavigate()
   const location = useLocation()
   const currentProjectPath = location.pathname.split('/').slice(0, 3).join('/')
 
-  const { data } = useQueryProject(projectId)
   const updateProject = useMutationUpdateProject()
   const deleteProject = useMutationDeleteProject()
-  const project = data?.data
 
   const {
     register,
@@ -42,19 +49,22 @@ export default function ProjectUpdate({ projectId }: { projectId: number }) {
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      title: project?.name ?? '',
-      color: project?.color ?? '',
+      title: name ?? '',
+      color: color ?? '',
     },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
     try {
       await updateProject.mutateAsync({
         id: projectId,
-        name: getValues('title'),
-        // color: getValues('color'),
+        name: values.title,
+        color: values.color,
       })
+      // await deleteMember.mutateAsync({projectid, email: deleteMemberList})
+      navigate(`${currentProjectPath}`)
+      setMemberList([])
+      setDeleteMemberList([])
     } catch (error) {
       console.error('Error updating project:', error)
     }
@@ -77,6 +87,7 @@ export default function ProjectUpdate({ projectId }: { projectId: number }) {
 
   const removeEmail = (memberToRemove: string) => {
     setMemberList(memberList.filter((member) => member !== memberToRemove))
+    setDeleteMemberList([...deleteMemberList, memberToRemove])
   }
 
   const onDelete = async () => {
@@ -156,10 +167,16 @@ export default function ProjectUpdate({ projectId }: { projectId: number }) {
                   key={key}
                   type="button"
                   onClick={() =>
-                    setValue('color', color, { shouldValidate: true })
+                    setValue(
+                      'color',
+                      key.toUpperCase() as UppercaseCategoryColor,
+                      { shouldValidate: true },
+                    )
                   }
                   className={`w-4 h-4 md:w-6 md:h-6 rounded-card md:rounded-input transition-all hover:opacity-80 ${
-                    getValues('color') === color && 'border-2 border-black'
+                    (getValues('color') === key.toUpperCase() ||
+                      getValues('color') === color) &&
+                    'border-2 border-black'
                   }`}
                   style={{
                     backgroundColor: color,
