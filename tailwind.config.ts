@@ -67,6 +67,9 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
       },
+      gridTemplateColumns: {
+        'min-auto': 'min-content auto',
+      },
     },
   },
   plugins: [animate],
