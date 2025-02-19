@@ -1,8 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
-
 import LoginPage from '@/components/auth/Login'
 import SignupPage from '@/components/auth/Signup'
-
 import CardDetailContainer from '@/components/card/CardDetailContainer'
 import CategoryContainer from '@/components/category/CategoryContainer'
 import HomePage from '@/components/home/Home'
@@ -14,6 +12,7 @@ import SectionContainer from '@/components/section/SectionContainer'
 import { AuthLayout, MainLayout } from '@/layout/index'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
+import ProfileContainer from '@/components/profile/ProfileContainer'
 
 const router = createBrowserRouter([
   {
@@ -58,6 +57,10 @@ const router = createBrowserRouter([
         path: 'inbox',
         element: <NotificationPage />,
       },
+      {
+        path: 'profile',
+        element: <ProfileContainer />,
+      },
 
       {
         path: 'project/:projectId',
@@ -79,11 +82,11 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <SectionContainer /> },
               {
-                path: ':cardId', // 중첩 라우팅 유지
+                path: ':cardId',
                 children: [
                   {
                     index: true,
-                    element: <CardDetailContainer />,
+                    element: <CardDetailContainer mode="view" />,
                   },
                   {
                     path: 'edit',
