@@ -1,18 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '@/shared/ui/Icon'
-import { useQuery } from '@tanstack/react-query'
-import { getProjects } from '@/services/user.service'
+import { useQueryProjectList } from '@/shared/queries/useQueryProjectList'
 
 interface ProjectListProps {
   isOpen: boolean
 }
 
 export const ProjectList = ({ isOpen }: ProjectListProps) => {
-  const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects'],
-    queryFn: getProjects,
-  })
-
+  const { data: projectsData, isPending } = useQueryProjectList()
+  const projects = projectsData?.data
   return (
     <div
       className={`mt-1 px-3 transition-all duration-300 ${isOpen ? 'max-h-[500px]' : 'max-h-0'}`}
@@ -29,10 +25,10 @@ export const ProjectList = ({ isOpen }: ProjectListProps) => {
         </span>
       </div>
       <div className="space-y-2">
-        {isLoading ? (
+        {isPending ? (
           <div className="p-2 text-gray-500 text-sm">로딩중...</div>
         ) : projects?.length ? (
-          projects.map((project) => (
+          projects?.map((project) => (
             <Link
               key={project.id}
               to={`/project/${project.id}`}
