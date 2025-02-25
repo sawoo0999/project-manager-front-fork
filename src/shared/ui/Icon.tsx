@@ -16,9 +16,11 @@ import AngleDoubleUp from '@/assets/icons/angle-double-small-up.svg?react'
 import AngleLeft from '@/assets/icons/angle-small-left.svg?react'
 import AngleRight from '@/assets/icons/angle-small-right.svg?react'
 import Bell from '@/assets/icons/bell.svg?react'
+import Calendar from '@/assets/icons/calendar.svg?react'
 import Category from '@/assets/icons/category.svg?react'
 import Check from '@/assets/icons/check.svg?react'
 import Close from '@/assets/icons/cross.svg?react'
+import ChevronDown from '@/assets/icons/dropdown-arrow.svg?react'
 import EyeClosed from '@/assets/icons/eye-crossed.svg?react'
 import Eye from '@/assets/icons/eye.svg?react'
 import Folder from '@/assets/icons/folder.svg?react'
@@ -30,8 +32,7 @@ import Plus from '@/assets/icons/plus.svg?react'
 import Setting from '@/assets/icons/settings.svg?react'
 import Delete from '@/assets/icons/trash.svg?react'
 import Member from '@/assets/icons/users.svg?react'
-import Calendar from '@/assets/icons/calendar.svg?react'
-import ChevronDown from '@/assets/icons/dropdown-arrow.svg?react'
+import Warning from '@/assets/icons/warning.svg?react'
 
 import { FC, SVGProps } from 'react'
 
@@ -59,6 +60,7 @@ export type IconName =
   | 'Setting'
   | 'Delete'
   | 'Member'
+  | 'Warning'
 
 const ICONS: Record<IconName, FC<SVGProps<SVGSVGElement>>> = {
   AngleDoubleDown,
@@ -84,6 +86,7 @@ const ICONS: Record<IconName, FC<SVGProps<SVGSVGElement>>> = {
   Setting,
   Delete,
   Member,
+  Warning,
 }
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   icon: IconName

@@ -1,18 +1,19 @@
-import { createBrowserRouter } from 'react-router-dom'
 import LoginPage from '@/components/auth/Login'
+import Password from '@/components/auth/Password'
 import SignupPage from '@/components/auth/Signup'
 import CardDetailContainer from '@/components/card/CardDetailContainer'
 import CategoryContainer from '@/components/category/CategoryContainer'
+import TaskContainer from '@/components/home/TaskContainer'
 import NotificationPage from '@/components/inbox/NotificationPage'
 import LandingContainer from '@/components/landing/LandingContainer'
+import ProfileContainer from '@/components/profile/ProfileContainer'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
 import ProjectUpdateContainer from '@/components/projectUpdate/ProjectUpdateContainer'
 import SectionContainer from '@/components/section/SectionContainer'
 import { AuthLayout, MainLayout } from '@/layout/index'
+import { createBrowserRouter } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
-import ProfileContainer from '@/components/profile/ProfileContainer'
-import TaskContainer from '@/components/home/TaskContainer'
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <ProfileContainer />,
+      },
+      {
+        path: 'password',
+        element: <Password />,
       },
 
       {

@@ -1,12 +1,14 @@
-import { useForm } from 'react-hook-form'
-import { useQueryUser } from '@/shared/queries/useQueryUser'
 import { useMutationUpdateProfile } from '@/shared/queries/useMutationProfile'
-import { useNavigate } from 'react-router-dom'
-import ProfileImageUploader from './ProfileImageUploader'
-import ProfileForm from './ProfileForm'
-import { z } from 'zod'
+import { useQueryUser } from '@/shared/queries/useQueryUser'
+import { Button } from '@/shared/ui/common/button'
+import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+import ProfileForm from './ProfileForm'
+import ProfileImageUploader from './ProfileImageUploader'
 
 const DEFAULT_IMAGE_URL =
   'https://img1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/7r5X/image/9djEiPBPMLu_IvCYyvRPwmZkM1g.jpg'
@@ -25,6 +27,8 @@ export default function ProfileContainer() {
   const { data: profileData, isPending } = useQueryUser()
   const updateProfileMutation = useMutationUpdateProfile()
   const profile = profileData?.data
+
+  const { openModal } = useModalStore()
 
   const {
     register,
@@ -84,6 +88,13 @@ export default function ProfileContainer() {
           onSubmit={handleSubmit(onSubmit)}
           isSubmitting={updateProfileMutation.isPending}
         />
+        <Button
+          variant="categoryDelete"
+          className="w-full !px-6 !py-2 mt-4"
+          onClick={() => openModal('account-withdrawal')}
+        >
+          탈퇴하기
+        </Button>
       </div>
     </div>
   )

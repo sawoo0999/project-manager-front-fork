@@ -1,5 +1,6 @@
 import { useMutationCreateSection } from '@/shared/queries/useMutationSection'
 import { Button } from '@/shared/ui/common/button'
+import Modal from '@/shared/ui/Modal'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -45,37 +46,31 @@ export default function CreateSectionModal({ modalId }: { modalId: ModalKey }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={() => closeModal(modalId)}
-      />
-      <div className="relative bg-white w-[300px] md:w-[400px] h-auto rounded-modal p-6  flex flex-col gap-4">
-        <div className="font-semibold text-base">섹션 추가</div>
+    <Modal modalId={modalId} width="w-[300px] md:w-[400px]">
+      <div className="font-semibold text-base">섹션 추가</div>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Input
-              placeholder="제목을 입력하세요"
-              {...register('title')}
-              className={`${errors.title ? 'border-warning' : ''} `}
-              autoFocus
-            />
-          </div>
-          <div className="flex gap-3 justify-end">
-            <Button
-              type="button"
-              variant="modalOutline"
-              onClick={() => closeModal(modalId)}
-            >
-              취소
-            </Button>
-            <Button type="submit" variant={`${isValid ? 'modal' : 'disabled'}`}>
-              생성
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <Input
+            placeholder="제목을 입력하세요"
+            {...register('title')}
+            className={`${errors.title ? 'border-warning' : ''} `}
+            autoFocus
+          />
+        </div>
+        <div className="flex gap-3 justify-end">
+          <Button
+            type="button"
+            variant="modalOutline"
+            onClick={() => closeModal(modalId)}
+          >
+            취소
+          </Button>
+          <Button type="submit" variant={`${isValid ? 'modal' : 'disabled'}`}>
+            생성
+          </Button>
+        </div>
+      </form>
+    </Modal>
   )
 }

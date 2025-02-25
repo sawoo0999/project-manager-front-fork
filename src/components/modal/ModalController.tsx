@@ -1,5 +1,6 @@
 import { useModalStore } from '@/store/useModalStore'
 import { Fragment, ReactNode } from 'react'
+import AccountWithdrawal from './AccountWithdrawal'
 import CreateCardModal from './CreateCardModal'
 import CreateProjectModal from './CreateProjectModal'
 import CreateSectionModal from './CreateSectionModal'
@@ -10,12 +11,14 @@ export type ModalKey =
   | 'create-project'
   | 'create-section'
   | 'update-section'
+  | 'account-withdrawal'
 
 const MODALS: Record<ModalKey, ReactNode> = {
   'create-card': <CreateCardModal modalId="create-card" />,
   'create-project': <CreateProjectModal modalId="create-project" />,
   'create-section': <CreateSectionModal modalId="create-section" />,
   'update-section': <UpdateSectionModal modalId="update-section" />,
+  'account-withdrawal': <AccountWithdrawal modalId="account-withdrawal" />,
 }
 
 export default function ModalController() {

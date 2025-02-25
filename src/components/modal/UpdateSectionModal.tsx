@@ -3,6 +3,7 @@ import {
   useMutationUpdateSection,
 } from '@/shared/queries/useMutationSection'
 import { Button } from '@/shared/ui/common/button'
+import Modal from '@/shared/ui/Modal'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -71,50 +72,41 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={() => closeModal(modalId)}
-      />
-      <div className="relative bg-white w-[300px] md:w-[400px] h-auto rounded-modal p-6  flex flex-col gap-4">
-        <div className="font-semibold text-base">섹션 수정</div>
+    <Modal modalId={modalId} width="w-[300px] md:w-[400px]">
+      <div className="font-semibold text-base">섹션 수정</div>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Input
-              placeholder="제목을 입력하세요"
-              {...register('title')}
-              className={`${errors.title ? 'border-warning' : ''} `}
-              autoFocus
-            />
-          </div>
-          <div className="flex justify-between">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <Input
+            placeholder="제목을 입력하세요"
+            {...register('title')}
+            className={`${errors.title ? 'border-warning' : ''} `}
+            autoFocus
+          />
+        </div>
+        <div className="flex justify-between">
+          <Button
+            variant="categoryDelete"
+            className="!px-6 !py-2"
+            type="button"
+            onClick={onDelete}
+          >
+            삭제
+          </Button>
+          <div className="flex gap-3 justify-end">
             <Button
-              variant="categoryDelete"
-              className="!px-6 !py-2"
               type="button"
-              onClick={onDelete}
+              variant="modalOutline"
+              onClick={() => closeModal(modalId)}
             >
-              삭제
+              취소
             </Button>
-            <div className="flex gap-3 justify-end">
-              <Button
-                type="button"
-                variant="modalOutline"
-                onClick={() => closeModal(modalId)}
-              >
-                취소
-              </Button>
-              <Button
-                type="submit"
-                variant={`${isValid ? 'modal' : 'disabled'}`}
-              >
-                수정
-              </Button>
-            </div>
+            <Button type="submit" variant={`${isValid ? 'modal' : 'disabled'}`}>
+              수정
+            </Button>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </Modal>
   )
 }

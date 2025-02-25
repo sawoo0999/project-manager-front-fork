@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/shared/ui/common/select'
 import { Textarea } from '@/shared/ui/common/textarea'
+import Modal from '@/shared/ui/Modal'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
@@ -109,175 +110,168 @@ export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
   }, [startDate, endDate, sectionName])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={() => closeModal(modalId)}
-      />
-      <div className="relative bg-white w-[350px] md:w-[500px] h-auto rounded-modal p-6 flex flex-col gap-4">
-        <div className="font-semibold text-base">카드 추가</div>
-        <form
-          className="flex flex-col gap-4 text-xs md:text-sm"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="md:px-4 flex flex-col gap-4">
+    <Modal modalId={modalId} width="w-[350px] md:w-[500px]">
+      <div className="font-semibold text-base">카드 추가</div>
+      <form
+        className="flex flex-col gap-4 text-xs md:text-sm"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="md:px-4 flex flex-col gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <label>제목</label>
+            <Input
+              placeholder="제목을 입력하세요"
+              {...register('title')}
+              className={`flex-1 ${errors.title ? 'border-warning' : ''}  text-xs md:text-sm h-10`}
+              autoFocus
+            />
+          </div>
+
+          <div className="flex items-start gap-3 md:gap-4">
+            <label className="whitespace-pre">상세{'\n'}정보</label>
+            <Textarea
+              {...register('content')}
+              placeholder="상세 정보를 입력하세요"
+            />
+          </div>
+
+          <div className="flex justify-between items-center">
             <div className="flex items-center gap-3 md:gap-4">
-              <label>제목</label>
-              <Input
-                placeholder="제목을 입력하세요"
-                {...register('title')}
-                className={`flex-1 ${errors.title ? 'border-warning' : ''}  text-xs md:text-sm h-10`}
-                autoFocus
-              />
+              <label>기간</label>
+              <Popover
+                open={isOpenStartDateCalendar}
+                onOpenChange={setIsOpenStartDateCalendar}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    className="w-[105px] md:w-[154px]  h-10"
+                    variant="date"
+                  >
+                    {startDate ? (
+                      format(startDate, 'PPP', { locale: ko })
+                    ) : (
+                      <div className="text-modalPlaceholder">시작일</div>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={new Date(startDate)}
+                    onSelect={(date) => {
+                      if (date)
+                        setValue('startDate', format(date, 'yyyy-MM-dd'))
+                      setIsOpenStartDateCalendar(false)
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
-            <div className="flex items-start gap-3 md:gap-4">
-              <label className="whitespace-pre">상세{'\n'}정보</label>
-              <Textarea
-                {...register('content')}
-                placeholder="상세 정보를 입력하세요"
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3 md:gap-4">
-                <label>기간</label>
-                <Popover
-                  open={isOpenStartDateCalendar}
-                  onOpenChange={setIsOpenStartDateCalendar}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      type="button"
-                      className="w-[105px] md:w-[154px]  h-10"
-                      variant="date"
-                    >
-                      {startDate ? (
-                        format(startDate, 'PPP', { locale: ko })
-                      ) : (
-                        <div className="text-modalPlaceholder">시작일</div>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <Calendar
-                      mode="single"
-                      selected={new Date(startDate)}
-                      onSelect={(date) => {
-                        if (date)
-                          setValue('startDate', format(date, 'yyyy-MM-dd'))
-                        setIsOpenStartDateCalendar(false)
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <span className="text-lg text-modalPlaceholder">~</span>
-              <div className="flex items-center gap-3 md:gap-4">
-                <Popover
-                  open={isOpenEndDateCalendar}
-                  onOpenChange={setIsOpenEndDateCalendar}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      type="button"
-                      className="w-[105px] md:w-[154px]  h-10"
-                      variant="date"
-                    >
-                      {endDate ? (
-                        format(endDate, 'PPP', { locale: ko })
-                      ) : (
-                        <div className="text-modalPlaceholder">마감일</div>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <Calendar
-                      mode="single"
-                      selected={new Date(endDate)}
-                      onSelect={(date) => {
-                        if (date)
-                          setValue('endDate', format(date, 'yyyy-MM-dd'))
-                        setIsOpenEndDateCalendar(false)
-                      }}
-                      disabled={(date) => date < new Date(startDate)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
+            <span className="text-lg text-modalPlaceholder">~</span>
             <div className="flex items-center gap-3 md:gap-4">
-              <label className="whitespace-pre">섹션</label>
-              <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
-                <Select
-                  onValueChange={(value) =>
-                    setValue('section', value, { shouldValidate: true })
-                  }
-                  value={sectionName}
-                >
-                  <div>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="섹션을 선택하세요"
-                        className="placeholder:text-modalPlaceholder"
-                      />
-                    </SelectTrigger>
-                  </div>
-                  <SelectContent>
-                    {sectionList?.data?.map((section) => (
-                      <SelectItem key={section.id} value={section.name}>
-                        {section.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 md:gap-4">
-              <label className="whitespace-pre">카테고리</label>
-              <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
-                <Select
-                  onValueChange={(value) =>
-                    setValue('category', value, { shouldValidate: true })
-                  }
-                  value={watch('category')}
-                >
-                  <div>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="카테고리를 선택하세요"
-                        className="placeholder:text-modalPlaceholder"
-                      />
-                    </SelectTrigger>
-                  </div>
-                  <SelectContent>
-                    {categoryList?.data?.map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Popover
+                open={isOpenEndDateCalendar}
+                onOpenChange={setIsOpenEndDateCalendar}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    className="w-[105px] md:w-[154px]  h-10"
+                    variant="date"
+                  >
+                    {endDate ? (
+                      format(endDate, 'PPP', { locale: ko })
+                    ) : (
+                      <div className="text-modalPlaceholder">마감일</div>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={new Date(endDate)}
+                    onSelect={(date) => {
+                      if (date) setValue('endDate', format(date, 'yyyy-MM-dd'))
+                      setIsOpenEndDateCalendar(false)
+                    }}
+                    disabled={(date) => date < new Date(startDate)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
-          <div className="flex gap-3 justify-end">
-            <Button
-              type="button"
-              variant="modalOutline"
-              onClick={() => closeModal(modalId)}
-            >
-              취소
-            </Button>
-            <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>
-              생성
-            </Button>
+          <div className="flex items-center gap-3 md:gap-4">
+            <label className="whitespace-pre">섹션</label>
+            <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
+              <Select
+                onValueChange={(value) =>
+                  setValue('section', value, { shouldValidate: true })
+                }
+                value={sectionName}
+              >
+                <div>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder="섹션을 선택하세요"
+                      className="placeholder:text-modalPlaceholder"
+                    />
+                  </SelectTrigger>
+                </div>
+                <SelectContent>
+                  {sectionList?.data?.map((section) => (
+                    <SelectItem key={section.id} value={section.name}>
+                      {section.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
+          <div className="flex items-center gap-3 md:gap-4">
+            <label className="whitespace-pre">카테고리</label>
+            <div className="[&_[data-placeholder]]:text-modalPlaceholder w-full">
+              <Select
+                onValueChange={(value) =>
+                  setValue('category', value, { shouldValidate: true })
+                }
+                value={watch('category')}
+              >
+                <div>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder="카테고리를 선택하세요"
+                      className="placeholder:text-modalPlaceholder"
+                    />
+                  </SelectTrigger>
+                </div>
+                <SelectContent>
+                  {categoryList?.data?.map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-3 justify-end">
+          <Button
+            type="button"
+            variant="modalOutline"
+            onClick={() => closeModal(modalId)}
+          >
+            취소
+          </Button>
+          <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>
+            생성
+          </Button>
+        </div>
+      </form>
+    </Modal>
   )
 }

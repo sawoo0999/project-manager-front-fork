@@ -9,6 +9,7 @@ import { useMutationCreateProject } from '@/shared/queries/useMutationProject'
 import { TempMember } from '@/shared/types/common'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
+import Modal from '@/shared/ui/Modal'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -102,121 +103,115 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={() => closeModal(modalId)}
-      />
-      <div className="relative bg-white w-[350px] md:w-[500px] h-auto rounded-modal p-6 flex flex-col gap-4">
-        <div className="font-semibold text-base">새 프로젝트</div>
-        <form
-          className="flex flex-col gap-4 text-xs md:text-sm"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="md:px-4 flex flex-col gap-4">
-            <div className="flex items-center gap-2 md:gap-4">
-              <label>프로젝트 이름</label>
+    <Modal modalId={modalId} width="w-[350px] md:w-[500px]">
+      <div className="font-semibold text-base">새 프로젝트</div>
+      <form
+        className="flex flex-col gap-4 text-xs md:text-sm"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="md:px-4 flex flex-col gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
+            <label>프로젝트 이름</label>
+            <Input
+              {...register('name')}
+              placeholder="프로젝트의 이름을 입력하세요"
+              className={`flex-1 ${errors.name ? 'border-warning' : ''} text-xs md:text-sm h-10`}
+              autoFocus
+            />
+          </div>
+
+          <div className="flex gap-1">
+            <div className="w-full flex items-center gap-2 md:gap-4">
+              <label className="whitespace-pre">멤버 초대</label>
               <Input
-                {...register('name')}
-                placeholder="프로젝트의 이름을 입력하세요"
-                className={`flex-1 ${errors.name ? 'border-warning' : ''} text-xs md:text-sm h-10`}
-                autoFocus
+                value={memberInput}
+                onChange={(e) => setMemberInput(e.target.value)}
+                placeholder="이메일을 입력하여 프로젝트에 멤버를 추가하세요"
+                className="text-xs md:text-sm placeholder:text-xs placeholder:md:text-sm h-10"
               />
             </div>
-
-            <div className="flex gap-1">
-              <div className="w-full flex items-center gap-2 md:gap-4">
-                <label className="whitespace-pre">멤버 초대</label>
-                <Input
-                  value={memberInput}
-                  onChange={(e) => setMemberInput(e.target.value)}
-                  placeholder="이메일을 입력하여 프로젝트에 멤버를 추가하세요"
-                  className="text-xs md:text-sm placeholder:text-xs placeholder:md:text-sm h-10"
-                />
-              </div>
-              <Button
-                className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
-                type="button"
-                onClick={addMember}
-                disabled={!isValidEmail(memberInput)}
-              >
-                <Icon icon="Plus" size={10} color="white" />
-              </Button>
-            </div>
-
-            <div className="border border-modalBorder rounded-input w-[302px] md:w-[352px] h-[120px] max-h-[120px] overflow-y-auto ml-auto px-4 py-3 flex flex-col gap-2">
-              {memberList.map((member) => {
-                return (
-                  <div
-                    key={member.email}
-                    className="flex items-center justify-between gap-2"
-                  >
-                    <div className="flex items-center gap-1 truncate">
-                      <div
-                        className="w-4 h-4 rounded-full text-white font-semibold flex items-center justify-center text-xs"
-                        style={{
-                          backgroundColor: member.profileColor,
-                        }}
-                      >
-                        {member.email.slice(0, 1).toUpperCase()}
-                      </div>
-                      <span className="truncate text-xs">{member.email}</span>
-                    </div>
-                    <Icon
-                      icon="Close"
-                      size={8}
-                      className="fill-modalPlaceholder cursor-pointer"
-                      onClick={() => removeEmail(member.email)}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-
-            <div className="flex items-center gap-2 md:gap-4">
-              <label className="whitespace-pre">테마 색상</label>
-              <div className="flex gap-1">
-                {CATEGORY_COLOR_ENTRIES.map(([key, color]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() =>
-                      setValue(
-                        'color',
-                        key.toUpperCase() as UppercaseCategoryColor,
-                        {
-                          shouldValidate: true,
-                        },
-                      )
-                    }
-                    className={`w-5 h-5 md:w-6 md:h-6 rounded-input transition-all hover:opacity-80 ${
-                      getValues('color') === key.toUpperCase() &&
-                      'border-2 border-black'
-                    }`}
-                    style={{
-                      backgroundColor: color,
-                    }}
-                    aria-label={`Select ${color} color`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-3 justify-end">
             <Button
+              className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
               type="button"
-              variant="modalOutline"
-              onClick={() => closeModal(modalId)}
+              onClick={addMember}
+              disabled={!isValidEmail(memberInput)}
             >
-              취소
-            </Button>
-            <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>
-              생성
+              <Icon icon="Plus" size={10} color="white" />
             </Button>
           </div>
-        </form>
-      </div>
-    </div>
+
+          <div className="border border-modalBorder rounded-input w-[302px] md:w-[352px] h-[120px] max-h-[120px] overflow-y-auto ml-auto px-4 py-3 flex flex-col gap-2">
+            {memberList.map((member) => {
+              return (
+                <div
+                  key={member.email}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <div className="flex items-center gap-1 truncate">
+                    <div
+                      className="w-4 h-4 rounded-full text-white font-semibold flex items-center justify-center text-xs"
+                      style={{
+                        backgroundColor: member.profileColor,
+                      }}
+                    >
+                      {member.email.slice(0, 1).toUpperCase()}
+                    </div>
+                    <span className="truncate text-xs">{member.email}</span>
+                  </div>
+                  <Icon
+                    icon="Close"
+                    size={8}
+                    className="fill-modalPlaceholder cursor-pointer"
+                    onClick={() => removeEmail(member.email)}
+                  />
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 md:gap-4">
+            <label className="whitespace-pre">테마 색상</label>
+            <div className="flex gap-1">
+              {CATEGORY_COLOR_ENTRIES.map(([key, color]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() =>
+                    setValue(
+                      'color',
+                      key.toUpperCase() as UppercaseCategoryColor,
+                      {
+                        shouldValidate: true,
+                      },
+                    )
+                  }
+                  className={`w-5 h-5 md:w-6 md:h-6 rounded-input transition-all hover:opacity-80 ${
+                    getValues('color') === key.toUpperCase() &&
+                    'border-2 border-black'
+                  }`}
+                  style={{
+                    backgroundColor: color,
+                  }}
+                  aria-label={`Select ${color} color`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-3 justify-end">
+          <Button
+            type="button"
+            variant="modalOutline"
+            onClick={() => closeModal(modalId)}
+          >
+            취소
+          </Button>
+          <Button type="submit" variant={isValid ? 'modal' : 'disabled'}>
+            생성
+          </Button>
+        </div>
+      </form>
+    </Modal>
   )
 }

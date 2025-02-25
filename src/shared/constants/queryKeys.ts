@@ -31,4 +31,9 @@ export const QUERY_KEYS = {
     detail: (projectId: number, sectionId?: number) =>
       [...QUERY_KEYS.cards.all, projectId, sectionId] as const,
   },
+  password: {
+    all: ['password'] as const,
+    lists: (id: number) => [...QUERY_KEYS.password.all, 'list', id] as const,
+    detail: (id: number) => [...QUERY_KEYS.password.all, id] as const,
+  },
 } as const
