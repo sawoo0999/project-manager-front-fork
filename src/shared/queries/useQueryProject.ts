@@ -1,7 +1,7 @@
 import axiosApi from '@/helper/api_helper'
-import { Project } from '@/services/projects.service'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
+import { Project } from '../types/project'
 import { APIResponse } from '../types/response'
 
 const useQueryProject = (projectId: number) => {
@@ -12,6 +12,7 @@ const useQueryProject = (projectId: number) => {
       return data
     },
     enabled: projectId > 0,
+    refetchOnReconnect: false, // 재연결 시 재요청 안 함
   })
   return { isPending, isError, data, error }
 }

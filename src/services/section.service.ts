@@ -1,25 +1,9 @@
 import axiosApi from '@/helper/api_helper'
-
-export interface CreateSectionRequest {
-  projectId: string | undefined
-  name: string
-}
-
-export interface Section {
-  id: number
-  name: string
-}
-
-export interface UpdateSectionRequest {
-  projectId: number
-  sectionId: number
-  name: string
-}
-
-export interface DeleteSectionRequest {
-  sectionId: number
-  projectId: number
-}
+import {
+  CreateSectionRequest,
+  DeleteSectionRequest,
+  UpdateSectionRequest,
+} from '@/shared/types/section'
 
 export const createSection = async ({
   projectId,

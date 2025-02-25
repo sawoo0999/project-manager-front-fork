@@ -4,6 +4,7 @@ import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { Input } from '../../shared/ui/common/input'
 import { ModalKey } from './ModalController'
@@ -35,10 +36,12 @@ export default function CreateSectionModal({ modalId }: { modalId: ModalKey }) {
         projectId: projectId,
         name: values.title,
       })
+      closeModal('create-section')
+      toast.success('섹션이 추가되었습니다')
     } catch (error) {
       console.error(error)
+      toast.error('오류가 발생하였습니다')
     }
-    closeModal('create-section')
   }
 
   return (

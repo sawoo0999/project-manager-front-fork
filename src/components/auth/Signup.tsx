@@ -20,6 +20,7 @@ import { signUpSchema } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 interface SignUpFormData {
   email: string
@@ -60,12 +61,14 @@ export default function SignupPage() {
         password: data.password,
         nickname: data.nickname,
       })
+      toast.success('회원가입이 완료되었습니다')
     } catch (error: unknown) {
       const message = axios.isAxiosError(error)
         ? error.response?.data?.message
         : '회원가입에 실패했습니다. 다시 시도해주세요.'
 
       form.setError('root', { message })
+      toast.error(`${message}`)
     }
   }
 

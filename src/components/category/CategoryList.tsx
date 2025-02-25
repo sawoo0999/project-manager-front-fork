@@ -1,4 +1,6 @@
 import {
+  CATEGORY_COLOR_ENTRIES,
+  CATEGORY_COLOR_KEYS,
   CATEGORY_COLORS,
   UppercaseCategoryColor,
 } from '@/shared/constants/color'
@@ -7,12 +9,15 @@ import {
   useMutationUpdateCategory,
 } from '@/shared/queries/useMutationCategory'
 import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
+import { ProjectSectionParams } from '@/shared/types/common'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { COLORS } from '../modal/CreateProjectModal'
 
@@ -22,7 +27,9 @@ const formSchema = z.object({
   color: z.enum(COLORS),
 })
 
-export default function CategoryList({ projectId }: { projectId: number }) {
+export default function CategoryList({
+  projectId,
+}: Pick<ProjectSectionParams, 'projectId'>) {
   const {
     register,
     handleSubmit,
@@ -42,30 +49,79 @@ export default function CategoryList({ projectId }: { projectId: number }) {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editColor, setEditColor] = useState(false)
 
-  const { data: categoryList } = useQueryCategoryList(projectId)
+  const { data: categoryList } = useQueryCategoryList({ projectId })
   const updateCategory = useMutationUpdateCategory()
   const deleteCategory = useMutationDeleteCategory()
 
   const onUpdate = async (values: z.infer<typeof formSchema>) => {
-    console.log(editingId)
-    console.log(values)
     try {
       await updateCategory.mutateAsync({
+        projectId,
         categoryId: editingId as number,
         name: values.name,
         description: values.description,
         color: values.color,
       })
+      setEditingId(null)
+      toast.success('카테고리가 수정되었습니다')
     } catch (error) {
-      console.error(error)
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{
+          statusCode: number
+          message: string
+          data: null
+        }>
+        if (axiosError.response?.data) {
+          const errorMessage = axiosError.response.data.message
+          if (
+            errorMessage === '프로젝트 내에서 카테고리명이 이미 존재합니다.'
+          ) {
+            toast.warning('이미 존재하는 카테고리 이름입니다.')
+          } else {
+            toast.error(`오류: ${errorMessage}`)
+          }
+        } else {
+          toast.error('서버 응답을 처리하는 중 오류가 발생했습니다.')
+        }
+      } else {
+        console.error('Error creating category:', error)
+        toast.error('예상치 못한 오류가 발생했습니다.')
+      }
     }
-    setEditingId(null)
   }
 
   const onDelete = async () => {
-    await deleteCategory.mutateAsync({
-      categoryId: editingId as number,
-    })
+    try {
+      await deleteCategory.mutateAsync({
+        projectId,
+        categoryId: editingId as number,
+      })
+      toast.success('카테고리가 삭제되었습니다')
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{
+          statusCode: number
+          message: string
+          data: null
+        }>
+        if (axiosError.response?.data) {
+          const errorMessage = axiosError.response.data.message
+          if (
+            errorMessage ===
+            '관련 된 카드를 제거해야 카테고리를 지울 수 있습니다.'
+          ) {
+            toast.warning('해당 카테고리에 카드가 존재합니다')
+          } else {
+            toast.error(`오류: ${errorMessage}`)
+          }
+        } else {
+          toast.error('서버 응답을 처리하는 중 오류가 발생했습니다.')
+        }
+      } else {
+        console.error('Error creating category:', error)
+        toast.error('예상치 못한 오류가 발생했습니다.')
+      }
+    }
   }
 
   return (
@@ -95,7 +151,14 @@ export default function CategoryList({ projectId }: { projectId: number }) {
                   <button
                     type="button"
                     className="w-4 h-4 md:w-5 md:h-5 rounded-card ml-1.5 lg:ml-8"
-                    style={{ backgroundColor: getValues('color') }}
+                    style={{
+                      backgroundColor:
+                        CATEGORY_COLORS[
+                          getValues(
+                            'color',
+                          ).toLowerCase() as keyof typeof CATEGORY_COLORS
+                        ],
+                    }}
                     onClick={() => {
                       setEditColor(!editColor)
                     }}
@@ -111,7 +174,7 @@ export default function CategoryList({ projectId }: { projectId: number }) {
                   <div
                     className={`${editColor ? 'block' : 'hidden'} border border-modalBorder bg-white p-0.5 rounded-card absolute top-5 md:top-6 z-50 left-1 lg:left-8 flex flex-col gap-0.5`}
                   >
-                    {Object.entries(CATEGORY_COLORS).map(([key, color]) => {
+                    {CATEGORY_COLOR_ENTRIES.map(([key, color]) => {
                       return (
                         <button
                           type="button"
@@ -200,7 +263,15 @@ export default function CategoryList({ projectId }: { projectId: number }) {
                     setEditingId(category.id as unknown as number)
                     setValue('name', category.name)
                     setValue('description', category.description)
-                    setValue('color', category.color as UppercaseCategoryColor)
+                    setValue(
+                      'color',
+                      (CATEGORY_COLOR_KEYS.find(
+                        (key) =>
+                          CATEGORY_COLORS[
+                            key as keyof typeof CATEGORY_COLORS
+                          ] === category.color,
+                      )?.toUpperCase() as UppercaseCategoryColor) ?? 'BLUE',
+                    )
                   }}
                 >
                   <Icon

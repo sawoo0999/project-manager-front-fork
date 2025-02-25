@@ -19,6 +19,7 @@ import { Input } from '@/shared/ui/common/input'
 import { loginSchema } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 interface LoginFormData {
   email: string
@@ -53,6 +54,7 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginMutation.mutateAsync(data)
+      toast.success('프로젝트 매니저에 오신 것을 환영합니다')
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         form.setError('root', {
@@ -64,6 +66,7 @@ export default function LoginPage() {
           message: '로그인에 실패했습니다. 다시 시도해주세요.',
         })
       }
+      toast.error('로그인에 실패했습니다')
     }
   }
 

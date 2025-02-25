@@ -1,9 +1,12 @@
 import { useQuerySectionList } from '@/shared/queries/useQuerySectionList'
+import { ProjectSectionParams } from '@/shared/types/common'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import Section from './Section'
 
-export default function CardContainer({ projectId }: { projectId: number }) {
+export default function CardContainer({
+  projectId,
+}: Pick<ProjectSectionParams, 'projectId'>) {
   const { openModal } = useModalStore()
 
   const { data: sectionList, isError } = useQuerySectionList(projectId)

@@ -1,14 +1,13 @@
 import { useQueryCardList } from '@/shared/queries/useQueryCardList'
+import { ProjectSectionParams } from '@/shared/types/common'
 import Card from '@/shared/ui/Card'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-interface SectionProps {
+interface SectionProps extends ProjectSectionParams {
   sectionName: string
-  sectionId: number
-  projectId: number
 }
 
 export default function Section({
@@ -19,7 +18,7 @@ export default function Section({
   const [isOpen, setIsOpen] = useState(false)
 
   const { openModal } = useModalStore()
-  const { data: cardList } = useQueryCardList(projectId)
+  const { data: cardList } = useQueryCardList({ projectId })
 
   const filteredCardList = cardList?.data?.filter(
     (card) => card.sectionId === sectionId,

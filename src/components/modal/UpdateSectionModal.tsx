@@ -6,6 +6,8 @@ import { Button } from '@/shared/ui/common/button'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { Input } from '../../shared/ui/common/input'
 import { ModalKey } from './ModalController'
@@ -20,6 +22,8 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
 
   const updateSection = useMutationUpdateSection()
   const deleteSection = useMutationDeleteSection()
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -43,17 +47,27 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
         })
       }
       closeModal('update-section')
+      toast.success('섹션이 수정되었습니다')
     } catch (error) {
       console.error(error)
+      toast.error('오류가 발생하였습니다')
     }
   }
 
   const onDelete = async () => {
     if (!modalData?.sectionId || !modalData?.projectId) return
-    await deleteSection.mutateAsync({
-      sectionId: modalData?.sectionId,
-      projectId: modalData?.projectId,
-    })
+    try {
+      await deleteSection.mutateAsync({
+        sectionId: modalData?.sectionId,
+        projectId: modalData?.projectId,
+      })
+      closeModal('update-section')
+      navigate(`/project/${modalData?.projectId}`)
+      toast.success('섹션이 삭제되었습니다')
+    } catch (error) {
+      console.error(error)
+      toast.error('오류가 발생하였습니다')
+    }
   }
 
   return (

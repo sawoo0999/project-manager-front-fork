@@ -1,14 +1,16 @@
 import {
   createSection,
-  CreateSectionRequest,
   deleteSection,
-  DeleteSectionRequest,
-  Section,
   updateSection,
-  UpdateSectionRequest,
 } from '@/services/section.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
+import {
+  CreateSectionRequest,
+  DeleteSectionRequest,
+  Section,
+  UpdateSectionRequest,
+} from '../types/section'
 
 const useMutationCreateSection = () => {
   const queryClient = useQueryClient()

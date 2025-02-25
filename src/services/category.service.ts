@@ -1,27 +1,9 @@
 import axiosApi from '@/helper/api_helper'
-import { UppercaseColorKeys } from './projects.service'
-
-export interface Category {
-  projectId: number
-  id: number
-  name: string
-  description: string
-  color: string
-}
-
-interface CreateCategoryRequest {
-  projectId: number
-  name: string
-  description: string
-  color: UppercaseColorKeys
-}
-
-interface UpdateCategoryRequest {
-  categoryId: number
-  name: string
-  description: string
-  color: UppercaseColorKeys
-}
+import {
+  CreateCategoryRequest,
+  DeleteCategoryRequest,
+  UpdateCategoryRequest,
+} from '@/shared/types/category'
 
 export const getAllCategories = async (projectNumber: number) => {
   try {
@@ -52,24 +34,29 @@ export const createCategory = async ({
 }
 
 export const updateCategory = async ({
+  projectId,
   categoryId,
   name,
   description,
   color,
 }: UpdateCategoryRequest) => {
-  const response = await axiosApi.put(`/categories/${categoryId}`, {
-    name,
-    description,
-    color,
-  })
+  const response = await axiosApi.put(
+    `projects/${projectId}/categories/${categoryId}`,
+    {
+      name,
+      description,
+      color,
+    },
+  )
   return response.data
 }
 
 export const deleteCategory = async ({
+  projectId,
   categoryId,
-}: {
-  categoryId: number
-}) => {
-  const response = await axiosApi.delete(`/categories/${categoryId}`)
+}: DeleteCategoryRequest) => {
+  const response = await axiosApi.delete(
+    `projects/${projectId}/categories/${categoryId}`,
+  )
   return response.data
 }

@@ -24,7 +24,7 @@ const useMutationUpdateCategory = () => {
     mutationFn: updateCategory,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.categories.all(variables.categoryId),
+        queryKey: QUERY_KEYS.categories.lists(variables.projectId),
       })
     },
   })
@@ -35,7 +35,7 @@ const useMutationDeleteCategory = () => {
     mutationFn: deleteCategory,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.categories.all(variables.categoryId),
+        queryKey: QUERY_KEYS.categories.lists(variables.projectId),
       })
     },
   })

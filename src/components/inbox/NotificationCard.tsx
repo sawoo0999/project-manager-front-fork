@@ -1,7 +1,7 @@
-import { ReactElement } from 'react'
 import { NotificationItem } from '@/shared/mock/inbox'
 import { Icon } from '@/shared/ui/Icon'
 import { Button } from '@/shared/ui/common/button'
+import { ReactElement } from 'react'
 
 interface NotificationCardProps {
   notification: NotificationItem

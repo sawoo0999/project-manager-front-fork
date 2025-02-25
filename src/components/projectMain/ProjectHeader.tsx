@@ -1,28 +1,22 @@
+import { useQueryMember } from '@/shared/queries/useQueryMember'
+import { Project } from '@/shared/types/project'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import MemberList from './MemberList'
 
-export interface ProjectProps {
-  id: number
-  name: string
-  color: string
-}
-
-export default function ProjectHeader({
-  id: projectId,
-  name,
-  color,
-}: ProjectProps) {
+export default function ProjectHeader({ id: projectId, name, color }: Project) {
   const navigate = useNavigate()
   const location = useLocation()
   const currentProjectPath = location.pathname.split('/').slice(0, 3).join('/')
 
   const [memberListOpen, setMemberListOpen] = useState(false)
 
+  const { data: memberList } = useQueryMember({ projectId })
+
   return (
-    <div className="relative flex justify-between p-3 border-b border-bodyBorder bg-white rounded-tl-lg">
+    <div className="relative flex justify-between p-3 border-b border-bodyBorder bg-white">
       <div className="flex items-center gap-3">
         <div
           className="w-5 h-5 md:w-10 md:h-10 rounded-button"
@@ -46,7 +40,12 @@ export default function ProjectHeader({
         <Icon icon="Member" size={10} />
         멤버
       </Button>
-      {memberListOpen && <MemberList currentProjectPath={currentProjectPath} />}
+      {memberListOpen && (
+        <MemberList
+          currentProjectPath={currentProjectPath}
+          memberList={memberList}
+        />
+      )}
     </div>
   )
 }

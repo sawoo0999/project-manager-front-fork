@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 interface User {
-  id: string
+  // id: string
   email: string
   nickName: string
   imageUrl?: string
@@ -15,6 +15,7 @@ interface UserState {
 }
 
 interface UserStore extends UserState {
+  getUser: () => User
   setUser: (user: User | null) => void
   updateUser: (userData: Partial<User>) => void
   clearUser: () => void
@@ -26,8 +27,15 @@ const userInitData: UserState = {
 
 const useUserStore = create<UserStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...userInitData,
+      getUser: () => {
+        const user = get().user
+        if (!user) {
+          throw new Error('User is not logged in')
+        }
+        return user
+      },
       setUser: (user: User | null) => {
         set({ user })
       },
@@ -49,5 +57,7 @@ const useUserStore = create<UserStore>()(
 
 // 편의성 훅
 export const useUser = () => useUserStore((state) => state.user)
+export const useSetUser = () => useUserStore((state) => state.setUser)
+export const useGetUser = () => useUserStore((state) => state.getUser)
 
 export default useUserStore

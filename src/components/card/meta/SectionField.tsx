@@ -1,12 +1,8 @@
 import { useQuerySection } from '@/shared/queries/useQuerySection'
+import { ProjectSectionParams } from '@/shared/types/common'
 import MetaInfoField from './MetaInfo'
 
-interface SectionFieldProps {
-  projectId: number
-  sectionId: number
-}
-
-export function SectionField({ projectId, sectionId }: SectionFieldProps) {
+export function SectionField({ projectId, sectionId }: ProjectSectionParams) {
   const { data: section } = useQuerySection({ projectId, sectionId })
   return (
     <MetaInfoField label="섹션">

@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
 import { useQueryUser } from '@/shared/queries/useQueryUser'
+import { useSetUser } from '@/store/useUserStore'
+import { Link } from 'react-router-dom'
 interface UserProfileProps {
   isOpen: boolean
 }
@@ -7,6 +8,16 @@ interface UserProfileProps {
 export const UserProfile = ({ isOpen }: UserProfileProps) => {
   const { data: userData, isPending } = useQueryUser()
   const user = userData?.data
+  const setUser = useSetUser()
+  if (user) {
+    setUser({
+      // id: user.id,
+      email: user.email,
+      nickName: user.nickname,
+      imageUrl: user.image_url,
+    })
+  }
+
   if (isPending || !user) return null
 
   return (

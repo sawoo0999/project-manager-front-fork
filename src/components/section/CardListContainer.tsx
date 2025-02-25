@@ -1,12 +1,11 @@
 import { useQuerySectionCardList } from '@/shared/queries/useQuerySectionCardList'
+import { ProjectSectionParams } from '@/shared/types/common'
 import CompletedCardList from './CompletedCardList'
 import InProgressCardList from './InProgressCardList'
 
 export default function CardListContainer({
   projectId,
-}: {
-  projectId: number
-}) {
+}: Pick<ProjectSectionParams, 'projectId'>) {
   const sectionId = parseInt(location.pathname.split('/').slice(-1).join(''))
 
   const { data: sectionCardList } = useQuerySectionCardList(

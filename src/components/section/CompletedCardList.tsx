@@ -1,15 +1,18 @@
-import { Card as SectionCardProps } from '@/services/card.service'
+import { Card as SectionCardProps } from '@/shared/types/card'
+import { ProjectSectionParams } from '@/shared/types/common'
 import { APIResponse } from '@/shared/types/response'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 
+interface CompletedCardListProps
+  extends Pick<ProjectSectionParams, 'projectId'> {
+  sectionCardList: APIResponse<SectionCardProps[]>
+}
+
 export default function CompletedCardList({
   projectId,
   sectionCardList,
-}: {
-  projectId: number
-  sectionCardList: APIResponse<SectionCardProps[]>
-}) {
+}: CompletedCardListProps) {
   return (
     <div className="flex flex-col gap-2 lg:min-w-[704px] ">
       <div className="font-semibold text-sm md:text-base pt-2">완료</div>

@@ -1,23 +1,27 @@
-import profileIcon from '@/assets/images/profile.png'
 import {
-  CATEGORY_COLORS,
+  CATEGORY_COLOR_ENTRIES,
+  CATEGORY_COLOR_KEYS,
+  CATEGORY_COLOR_VALUES,
   UppercaseCategoryColor,
 } from '@/shared/constants/color'
-import { useMutationInviteProject } from '@/shared/queries/useMutationInviteProject'
+import { useMutationInviteProject } from '@/shared/queries/useMutationMember'
 import { useMutationCreateProject } from '@/shared/queries/useMutationProject'
+import { TempMember } from '@/shared/types/common'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { Input } from '../../shared/ui/common/input'
 import { ModalKey } from './ModalController'
 
-export const COLORS = Object.keys(CATEGORY_COLORS).map((key) =>
-  key.toUpperCase(),
-) as [UppercaseCategoryColor, ...UppercaseCategoryColor[]]
+export const COLORS = CATEGORY_COLOR_KEYS.map((key) => key.toUpperCase()) as [
+  UppercaseCategoryColor,
+  ...UppercaseCategoryColor[],
+]
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -39,13 +43,13 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
       color: 'BLUE',
     },
   })
-  const [memberList, setMemberList] = useState<string[]>([])
+  const [memberList, setMemberList] = useState<TempMember[]>([])
   const [memberInput, setMemberInput] = useState('')
 
   const { closeModal } = useModalStore()
 
   const createProject = useMutationCreateProject()
-  const inviteProject = useMutationInviteProject()
+  const inviteMember = useMutationInviteProject()
 
   const isValidEmail = (email: string) => {
     return z.string().email().safeParse(email).success
@@ -53,35 +57,48 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const emailList = memberList.map((member) => member.email)
       const result = await createProject.mutateAsync({
         name: values.name,
         color: values.color,
       })
-      if (memberList.length > 0) {
-        await inviteProject.mutateAsync({
-          projectId: result.id,
-          email: memberList,
+      console.log(result)
+      if (memberList.length > 0 && result.data?.id) {
+        await inviteMember.mutateAsync({
+          projectId: result.data?.id,
+          emailList,
         })
       }
+      setMemberList([])
       closeModal('create-project')
+      toast.success('프로젝트가 생성되었습니다')
     } catch (error) {
       console.error(error)
+      toast.error('오류가 발생하였습니다')
     }
   }
 
-  const addEmail = () => {
-    if (
-      memberInput &&
-      isValidEmail(memberInput) &&
-      !memberList.includes(memberInput)
-    ) {
-      setMemberList([...memberList, memberInput])
+  const addMember = () => {
+    if (memberList.some((member) => member.email === memberInput)) {
+      toast.warning('이미 초대된 멤버입니다')
+      return
+    } else if (memberInput && isValidEmail(memberInput)) {
+      const newMember: TempMember = {
+        email: memberInput,
+        profileColor:
+          CATEGORY_COLOR_VALUES[
+            Math.floor(Math.random() * CATEGORY_COLOR_VALUES.length)
+          ],
+      }
+      setMemberList([...memberList, newMember])
       setMemberInput('')
     }
   }
 
   const removeEmail = (memberToRemove: string) => {
-    setMemberList(memberList.filter((member) => member !== memberToRemove))
+    setMemberList(
+      memberList.filter((member) => member.email !== memberToRemove),
+    )
   }
 
   return (
@@ -120,7 +137,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
               <Button
                 className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
                 type="button"
-                onClick={addEmail}
+                onClick={addMember}
                 disabled={!isValidEmail(memberInput)}
               >
                 <Icon icon="Plus" size={10} color="white" />
@@ -131,18 +148,25 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
               {memberList.map((member) => {
                 return (
                   <div
-                    key={member}
+                    key={member.email}
                     className="flex items-center justify-between gap-2"
                   >
                     <div className="flex items-center gap-1 truncate">
-                      <img src={profileIcon} className="w-4 h-4 " />
-                      <span className="truncate text-xs">{member}</span>
+                      <div
+                        className="w-4 h-4 rounded-full text-white font-semibold flex items-center justify-center text-xs"
+                        style={{
+                          backgroundColor: member.profileColor,
+                        }}
+                      >
+                        {member.email.slice(0, 1).toUpperCase()}
+                      </div>
+                      <span className="truncate text-xs">{member.email}</span>
                     </div>
                     <Icon
                       icon="Close"
                       size={8}
                       className="fill-modalPlaceholder cursor-pointer"
-                      onClick={() => removeEmail(member)}
+                      onClick={() => removeEmail(member.email)}
                     />
                   </div>
                 )
@@ -152,7 +176,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
             <div className="flex items-center gap-2 md:gap-4">
               <label className="whitespace-pre">테마 색상</label>
               <div className="flex gap-1">
-                {Object.entries(CATEGORY_COLORS).map(([key, color]) => (
+                {CATEGORY_COLOR_ENTRIES.map(([key, color]) => (
                   <button
                     key={key}
                     type="button"

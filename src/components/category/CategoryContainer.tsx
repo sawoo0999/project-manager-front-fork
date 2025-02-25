@@ -9,7 +9,7 @@ export default function CategoryContainer() {
 
   if (project?.data)
     return (
-      <section className="w-full bg-white">
+      <section className="w-full bg-white rounded-tl-lg">
         <ProjectHeader {...project?.data} />
         <Category projectId={projectId} />
       </section>

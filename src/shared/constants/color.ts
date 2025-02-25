@@ -24,3 +24,7 @@ export const CATEGORY_COLORS = {
   indigo: '#5C6BC0',
   pink: '#F06292',
 } as const
+
+export const CATEGORY_COLOR_ENTRIES = Object.entries(CATEGORY_COLORS)
+export const CATEGORY_COLOR_VALUES = Object.values(CATEGORY_COLORS)
+export const CATEGORY_COLOR_KEYS = Object.keys(CATEGORY_COLORS)

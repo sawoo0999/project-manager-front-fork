@@ -1,20 +1,21 @@
-import { Card as SectionCardProps } from '@/services/card.service'
 import { useQuerySection } from '@/shared/queries/useQuerySection'
+import { Card as SectionCardProps } from '@/shared/types/card'
+import { ProjectSectionParams } from '@/shared/types/common'
 import { APIResponse } from '@/shared/types/response'
 import Card from '@/shared/ui/Card'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
 import { useState } from 'react'
 
+interface InProgressCardListProps extends ProjectSectionParams {
+  sectionCardList: APIResponse<SectionCardProps[]>
+}
+
 export default function InProgressCardList({
   projectId,
   sectionId,
   sectionCardList,
-}: {
-  projectId: number
-  sectionId: number
-  sectionCardList: APIResponse<SectionCardProps[]>
-}) {
+}: InProgressCardListProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const { openModal } = useModalStore()

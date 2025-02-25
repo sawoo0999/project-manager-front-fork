@@ -1,4 +1,5 @@
 import axiosApi from '@/helper/api_helper'
+import { CreateCardRequest } from '@/shared/types/card'
 import { APIResponse } from '@/shared/types/response'
 
 export interface FormData {
@@ -7,28 +8,6 @@ export interface FormData {
   startDate: Date | undefined
   endDate: Date | undefined
   categoryId: number
-}
-export interface Card {
-  cardId: number
-  sectionId: number
-  title: string
-  content: string
-  startDate: string
-  endDate: string
-  completeDate: string | null
-  color: string
-  categoryName: string
-  nickName: string
-  photoUrl: string
-}
-export interface CreateCardRequest {
-  projectId: number
-  sectionId: number
-  categoryId: number
-  title: string
-  content: string | undefined
-  startDate: string
-  endDate: string
 }
 
 export interface UpdateCardRequest {

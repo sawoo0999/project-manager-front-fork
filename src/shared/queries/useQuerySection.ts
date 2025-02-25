@@ -1,15 +1,11 @@
 import axiosApi from '@/helper/api_helper'
-import { Section } from '@/services/section.service'
 import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { QUERY_KEYS } from '../constants/queryKeys'
+import { ProjectSectionParams } from '../types/common'
+import { Section } from '../types/section'
 
-interface GetSectionProps {
-  projectId: number
-  sectionId: number
-}
-
-const useQuerySection = ({ projectId, sectionId }: GetSectionProps) => {
+const useQuerySection = ({ projectId, sectionId }: ProjectSectionParams) => {
   const { data, isError, isLoading, refetch } = useQuery<Section, AxiosError>({
     queryKey: QUERY_KEYS.sections.detail(projectId, sectionId),
     queryFn: async () => {

@@ -45,7 +45,7 @@ export default function MainLayout() {
       </nav>
       <div className="flex gap-3 h-[calc(100vh-56px)] lg:h-[calc(100vh-70px)]">
         <Sidebar />
-        <main className="flex grow overflow-x-hidden">
+        <main className="flex grow overflow-x-hidden rounded-tl-lg">
           <Outlet />
         </main>
       </div>

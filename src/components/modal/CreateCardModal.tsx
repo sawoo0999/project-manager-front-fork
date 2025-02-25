@@ -1,5 +1,5 @@
 import { useProjectId } from '@/shared/hooks/useProjectId'
-import { useMutationCreateCard } from '@/shared/queries/useMutationCreateCard'
+import { useMutationCreateCard } from '@/shared/queries/useMutationCard'
 import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
 import { useQuerySectionList } from '@/shared/queries/useQuerySectionList'
 import { Button } from '@/shared/ui/common/button'
@@ -23,6 +23,7 @@ import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { Input } from '../../shared/ui/common/input'
 import { ModalKey } from './ModalController'
@@ -69,7 +70,7 @@ export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
 
   const projectId = useProjectId()
   const { data: sectionList } = useQuerySectionList(projectId)
-  const { data: categoryList } = useQueryCategoryList(projectId)
+  const { data: categoryList } = useQueryCategoryList({ projectId })
 
   const startDate = watch('startDate')
   const endDate = watch('endDate')
@@ -94,10 +95,12 @@ export default function CreateCardModal({ modalId }: { modalId: ModalKey }) {
           endDate: values.endDate,
         })
       }
+      closeModal('create-card')
+      toast.success('카드가 생성되었습니다')
     } catch (error) {
       console.error(error)
+      toast.error('오류가 발생하였습니다')
     }
-    closeModal('create-card')
   }
 
   useEffect(() => {

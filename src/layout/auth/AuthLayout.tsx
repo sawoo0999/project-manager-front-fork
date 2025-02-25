@@ -9,7 +9,7 @@ export default function AuthLayout() {
           <img src={logoText} className="w-[100px] lg:w-[160px] h-auto" />
         </Link>
       </nav>
-      <main className="w-full h-[calc(100vh-56px)] md:h-[calc(100vh-70px)] bg-white flex justify-center items-center">
+      <main className="w-full h-[calc(100vh-56px)] lg:h-[calc(100vh-70px)] bg-white flex justify-center items-center">
         <Outlet />
       </main>
     </div>

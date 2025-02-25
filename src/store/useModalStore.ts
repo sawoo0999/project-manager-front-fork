@@ -34,6 +34,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
       activeModals: { ...state.activeModals, [key]: true },
       modalData: { ...state.modalData, [key]: data },
     })),
+
   closeModal: (key) =>
     set((state) => ({
       activeModals: { ...state.activeModals, [key]: false },
