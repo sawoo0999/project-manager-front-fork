@@ -22,12 +22,14 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     'create-project': false,
     'create-section': false,
     'update-section': false,
+    'account-withdrawal': false,
   },
   modalData: {
     'create-card': {},
     'create-project': {},
     'create-section': {},
     'update-section': {},
+    'account-withdrawal': {},
   },
   openModal: (key, data) =>
     set((state) => ({
