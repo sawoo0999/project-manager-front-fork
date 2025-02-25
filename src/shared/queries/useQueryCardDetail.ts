@@ -2,7 +2,7 @@ import axiosApi from '@/helper/api_helper'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
 import { APIResponse } from '../types/response'
-import { CardData } from '@/services/card.service'
+import { CardData } from '../types/card'
 
 interface CardDetailParams {
   cardId: number

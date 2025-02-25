@@ -1,11 +1,11 @@
 import logoText from '@/assets/images/logo-text.png'
 import ModalController from '@/components/modal/ModalController'
-import { postLogout } from '@/services/auth.service'
 import { Icon } from '@/shared/ui/Icon'
 import { useSidebarStore } from '@/store/sidebarStore'
 import useSessionStore from '@/store/useSessionStore'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import { getLogout } from '@/services/auth.service'
 
 export default function MainLayout() {
   const { toggle } = useSidebarStore()
@@ -14,7 +14,7 @@ export default function MainLayout() {
   const navigate = useNavigate()
   const handleLogout = async () => {
     try {
-      await postLogout()
+      await getLogout()
       logout()
       navigate('/')
     } catch (error) {

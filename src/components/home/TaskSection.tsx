@@ -1,4 +1,4 @@
-import { TaskListResponse } from '@/services/task.service'
+import { TaskListResponse } from '@/shared/types/task'
 import TaskList from './TaskList'
 
 interface TaskSectionProps {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { APIResponse } from '../types/response'
-import { TaskListResponse } from '@/services/task.service'
 import axiosApi from '@/helper/api_helper'
+import { TaskListResponse } from '../types/task'
 
 const useQueryInProgressTaskList = (page?: number) => {
   return useQuery<APIResponse<TaskListResponse>>({

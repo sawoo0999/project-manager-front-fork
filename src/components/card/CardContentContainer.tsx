@@ -9,7 +9,11 @@ import { ActionButtons } from './ActionButtons'
 import CardMetaInfo from './CardMetaInfo'
 import CardHeader from './CardHeader'
 import CardDescription from './CardDescription'
-import CardComments from './CardComments'
+import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
+import { Category } from '@/shared/types/category'
+import { toast } from 'react-toastify'
+import CardEditButtons from './CardEditButtons'
+import CommentSection from './meta/CommentSection'
 
 interface CardContentContainerProps {
   mode: 'view' | 'edit'
@@ -56,7 +60,7 @@ export default function CardContentContainer({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
   })
-
+  const { data: categoriesData } = useQueryCategoryList({ projectId })
   const {
     data: cardDetail,
     isPending,
@@ -68,6 +72,7 @@ export default function CardContentContainer({
   })
   const updateCardMutation = useMutationUpdateCard()
   const card = cardDetail?.data
+  const categories: Category[] = categoriesData?.data ?? []
   const isComplete = card?.completeDate !== null
   useEffect(() => {
     if (card) {
@@ -89,12 +94,34 @@ export default function CardContentContainer({
 
   const handleCategoryChange = useCallback(
     (categoryId: number, categoryName: string, categoryColor: string) => {
-      setValue('categoryId', categoryId)
-      setValue('categoryName', categoryName)
-      setValue('categoryColor', categoryColor)
+      setValue('categoryId', categoryId, { shouldValidate: true })
+      setValue('categoryName', categoryName, { shouldValidate: true })
+      setValue('categoryColor', categoryColor, { shouldValidate: true })
     },
     [setValue],
   )
+
+  const resetForm = () => {
+    if (card) {
+      const selectedCategory = categories?.find(
+        (cat) => cat.name === card.categoryName,
+      )
+
+      reset({
+        title: card.title,
+        content: card.content,
+        startDate: card.startDate
+          ? new Date(card.startDate.split('T')[0])
+          : undefined,
+        endDate: card.endDate
+          ? new Date(card.endDate.split('T')[0])
+          : undefined,
+        categoryId: selectedCategory ? selectedCategory.id : undefined,
+        categoryName: card.categoryName,
+        categoryColor: card.categoryColor,
+      })
+    }
+  }
 
   const onSubmit = async (values: FormValues) => {
     if (!cardId || !projectId || !sectionId) return
@@ -103,9 +130,11 @@ export default function CardContentContainer({
         cardId: parsedCardId,
         data: values,
       })
+      toast.success('카드가 수정되었습니다')
       navigate(`/project/${projectId}/section/${sectionId}/${cardId}`)
     } catch (error) {
       console.error('Error updating card:', error)
+      toast.error('오류가 발생하였습니다')
     }
   }
 
@@ -113,45 +142,55 @@ export default function CardContentContainer({
   if (isError || !card) return <div>카드를 불러올 수 없습니다.</div>
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="bg-white rounded-card p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6"
-    >
-      <ActionButtons
-        isComplete={isComplete}
-        cardId={parsedCardId}
-        isEdit={isEdit}
-      />
-      <CardHeader
-        register={register}
-        errors={errors}
-        isEdit={isEdit}
-        title={card.title}
-      />
-      <CardMetaInfo
-        watch={watch}
-        setValue={setValue}
-        errors={errors}
-        isEdit={isEdit}
-        card={card}
-        sectionId={parsedSectionId}
-        projectId={projectId}
-        handleCategoryChange={handleCategoryChange}
-      />
-      <CardDescription
-        register={register}
-        errors={errors}
-        isEdit={isEdit}
-        content={card.content}
-      />
-      <CardComments
-        isEdit={isEdit}
-        projectId={projectId}
-        sectionId={parsedSectionId}
-        cardId={parsedCardId}
-        isValid={isValid}
-        updateCardMutation={updateCardMutation}
-      />
-    </form>
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white rounded-card p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6"
+      >
+        <ActionButtons
+          isComplete={isComplete}
+          cardId={parsedCardId}
+          isEdit={isEdit}
+        />
+        <CardHeader
+          register={register}
+          errors={errors}
+          isEdit={isEdit}
+          title={card.title}
+        />
+        <CardMetaInfo
+          watch={watch}
+          setValue={setValue}
+          errors={errors}
+          isEdit={isEdit}
+          card={card}
+          sectionId={parsedSectionId}
+          projectId={projectId}
+          handleCategoryChange={handleCategoryChange}
+          categories={categories}
+        />
+        <CardDescription
+          register={register}
+          errors={errors}
+          isEdit={isEdit}
+          content={card.content}
+        />
+        {isEdit && (
+          <CardEditButtons
+            projectId={projectId}
+            sectionId={parsedSectionId}
+            cardId={parsedCardId}
+            isValid={isValid}
+            isPending={updateCardMutation.isPending}
+            resetForm={resetForm}
+          />
+        )}
+      </form>
+      {!isEdit && (
+        <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
+          <CommentSection cardId={parsedCardId} isComplete={isComplete} />
+        </div>
+      )}
+    </>
   )
 }

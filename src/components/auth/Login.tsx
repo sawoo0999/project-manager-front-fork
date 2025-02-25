@@ -34,7 +34,6 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: postLogin,
     onSuccess: (data) => {
-      // 세션 정보 저장
       setSessionInfo({
         access_token: data.token,
         isAuthenticated: true,

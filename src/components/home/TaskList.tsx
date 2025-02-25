@@ -1,5 +1,5 @@
+import { TaskListResponse } from '@/shared/types/task'
 import { Icon } from '@/shared/ui/Icon'
-import { TaskListResponse } from '@/services/task.service'
 import { Link } from 'react-router-dom'
 
 interface TaskListProps {
@@ -31,11 +31,11 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col   ">
+    <div>
+      <div className="flex flex-col ">
         {/*  PC 버전 */}
-        <div className="hidden  lg:block ">
-          <div className="grid grid-cols-[180px_120px_120px_200px_160px] place-items-center ">
+        <div className="hidden h-[200px]  lg:block ">
+          <div className="grid grid-cols-[180px_120px_120px_200px_160px] place-items-center">
             <div className="contents">
               <div className="w-full text-sm text-center py-1 border-b">
                 프로젝트

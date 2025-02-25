@@ -1,16 +1,18 @@
 import {
   completeCard,
-  CompleteCardRequest,
   deleteCard,
-  DeleteCardRequest,
   progressCard,
-  ProgressCardRequest,
   updateCard,
-  UpdateCardRequest,
 } from '@/services/card.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
 import { APIResponse } from '../types/response'
+import {
+  DeleteCardRequest,
+  UpdateCardRequest,
+  CompleteCardRequest,
+  ProgressCardRequest,
+} from '../types/card'
 
 const useMutationDeleteCard = () => {
   const queryClient = useQueryClient()

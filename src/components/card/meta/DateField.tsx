@@ -36,14 +36,14 @@ export function DateField({
           onRangeSelect={onRangeSelect ?? (() => {})}
         />
       ) : (
-        <>
+        <div className="flex gap-4 px-1">
           <Icon icon="Calendar" size={20} />
           <span className="text-xs text-cardDate">
             {displayEndDate
               ? format(new Date(displayEndDate), 'M월 d일')
               : '날짜 없음'}
           </span>
-        </>
+        </div>
       )}
     </MetaInfoField>
   )

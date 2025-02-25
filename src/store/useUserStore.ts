@@ -59,5 +59,5 @@ const useUserStore = create<UserStore>()(
 export const useUser = () => useUserStore((state) => state.user)
 export const useSetUser = () => useUserStore((state) => state.setUser)
 export const useGetUser = () => useUserStore((state) => state.getUser)
-
+export const useUpdateUser = () => useUserStore((state) => state.updateUser)
 export default useUserStore

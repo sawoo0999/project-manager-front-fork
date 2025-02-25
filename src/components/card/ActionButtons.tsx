@@ -7,6 +7,7 @@ import {
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 interface ActionButtonsProps {
   isComplete: boolean
@@ -32,14 +33,17 @@ export function ActionButtons({
 
       if (isComplete) {
         await inProgressCardMutation.mutateAsync({ cardId })
+        toast.success('카드가 진행되었습니다')
       } else {
         await completeCardMutation.mutateAsync({
           cardId,
           completeDate: formattedDate,
         })
+        toast.success('카드가 완료되었습니다')
       }
     } catch (error) {
       console.error('Failed to toggle card completion:', error)
+      toast.error('오류가 발생했습니다')
     }
   }
 
@@ -49,9 +53,11 @@ export function ActionButtons({
         cardId,
         projectId: projectId,
       })
+      toast.success('카드가 삭제되었습니다')
       navigate(`/project/${projectId}`)
     } catch (error) {
       console.error('Failed to delete card:', error)
+      toast.error('오류가 발생했습니다')
     }
   }
 
@@ -64,6 +70,7 @@ export function ActionButtons({
           e.preventDefault()
           handleCompleteToggle()
         }}
+        type="button"
         disabled={completeCardMutation.isPending}
       >
         <div
@@ -85,6 +92,7 @@ export function ActionButtons({
             onClick={handleDelete}
             disabled={deleteCardMutation.isPending}
             className="h-4 sm:w-5 sm:h-5"
+            type="button"
           >
             <Icon
               icon="Delete"
@@ -97,7 +105,11 @@ export function ActionButtons({
             <Icon icon="Setting" size={18} className="sm:w-5 sm:h-5" />
           </Link>
         )}
-        <button onClick={() => navigate(-1)} className="h-4 sm:w-5 sm:h-5">
+        <button
+          onClick={() => navigate(`/project/${projectId}`)}
+          className="h-4 sm:w-5 sm:h-5"
+          type="button"
+        >
           <Icon icon="Home" size={18} />
         </button>
       </div>

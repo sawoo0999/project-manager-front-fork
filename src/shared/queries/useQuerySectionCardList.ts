@@ -1,8 +1,8 @@
 import axiosApi from '@/helper/api_helper'
-import { Card } from '@/services/card.service'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
 import { APIResponse } from '../types/response'
+import { Card } from '../types/card'
 
 const useQuerySectionCardList = (projectId: number, sectionId: number) => {
   const { data, isError } = useQuery<APIResponse<Card[]>>({

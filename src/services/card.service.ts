@@ -1,46 +1,12 @@
 import axiosApi from '@/helper/api_helper'
-import { CreateCardRequest } from '@/shared/types/card'
+import {
+  CompleteCardRequest,
+  CreateCardRequest,
+  DeleteCardRequest,
+  ProgressCardRequest,
+  UpdateCardRequest,
+} from '@/shared/types/card'
 import { APIResponse } from '@/shared/types/response'
-
-export interface FormData {
-  title: string
-  content: string
-  startDate: Date | undefined
-  endDate: Date | undefined
-  categoryId: number
-}
-
-export interface UpdateCardRequest {
-  cardId: number
-  data: FormData
-}
-
-export interface CardData {
-  id: number
-  title: string
-  content: string
-  startDate: string
-  endDate: string
-  completeDate: string | null
-  categoryColor: string
-  categoryName: string
-  nickName: string
-  photoUrl: string
-}
-
-export interface DeleteCardRequest {
-  cardId: number
-  projectId: number
-}
-
-export interface CompleteCardRequest {
-  cardId: number
-  completeDate: string | null
-}
-
-export interface ProgressCardRequest {
-  cardId: number
-}
 
 export const createCard = async ({
   projectId,
@@ -93,5 +59,36 @@ export const progressCard = async ({
   cardId,
 }: ProgressCardRequest): Promise<APIResponse<null>> => {
   const response = await axiosApi.put(`/cards/${cardId}/progress`)
+  return response.data
+}
+
+export const createComment = async ({
+  cardId,
+  content,
+}: {
+  cardId: number
+  content: string
+}): Promise<APIResponse<null>> => {
+  const response = await axiosApi.post(`/cards/${cardId}/comments`, { content })
+  return response.data
+}
+
+export const editComment = async ({
+  commentId,
+  content,
+}: {
+  commentId: number
+  content: string
+}): Promise<APIResponse<null>> => {
+  const response = await axiosApi.put(`/comments/${commentId}`, { content })
+  return response.data
+}
+
+export const deleteComment = async ({
+  commentId,
+}: {
+  commentId: number
+}): Promise<APIResponse<null>> => {
+  const response = await axiosApi.delete(`/comments/${commentId}`)
   return response.data
 }

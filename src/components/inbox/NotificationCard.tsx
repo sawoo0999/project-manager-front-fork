@@ -38,7 +38,7 @@ export default function NotificationCard({
             <Button variant="categoryDelete" className="text-xs px-3 py-1">
               거절
             </Button>
-            <Button variant="modal" className="text-xs px-3 py-1">
+            <Button variant="inbox" className="text-xs px-3 py-1">
               수락
             </Button>
           </div>

@@ -7,22 +7,22 @@ import { useQueryProjectList } from '@/shared/queries/useQueryProjectList'
 import UserGreeting from './UserGreeting'
 import ProjectSummary from './ProjectSummary'
 import TaskSection from './TaskSection'
-import { useQueryUser } from '@/shared/queries/useQueryUser'
+import { useGetUser } from '@/store/useUserStore'
 
 export default function TaskContainer() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const inProgressPage = Number(searchParams.get('inProgressPage')) || undefined
   const completedPage = Number(searchParams.get('completedPage')) || undefined
-  const { data: userData } = useQueryUser()
   const { data: inProgressTasksData } =
     useQueryInProgressTaskList(inProgressPage)
   const { data: completedTasksData } = useQueryCompletedTaskList(completedPage)
   const { data: projectsData } = useQueryProjectList()
-  const user = userData?.data
   const projects = projectsData?.data
   const inProgressTasks = inProgressTasksData?.data
   const completedTasks = completedTasksData?.data
+  const getUser = useGetUser()
+  const loggedInUser = getUser()
   const totalCard =
     (inProgressTasks?.totalElements ?? 0) + (completedTasks?.totalElements ?? 0)
   const handlePageChange = (
@@ -42,19 +42,19 @@ export default function TaskContainer() {
     return (
       <div className="w-full bg-white rounded-l-lg">
         <div className="flex flex-col w-full items-center py-5 gap-4 px-4 sm:px-2">
-          <UserGreeting user={user?.nickname ?? ''} />
+          <UserGreeting user={loggedInUser?.nickName ?? ''} />
           <ProjectSummary
             projectCount={projects?.length ?? 0}
             totalCard={totalCard}
           />
           <div className="flex flex-col items-center gap-3 w-full">
             <TaskSection
-              title={`${user?.nickname}의 진행중인 작업`}
+              title={`${loggedInUser?.nickName}의 진행중인 작업`}
               taskData={inProgressTasks}
               onPageChange={(page) => handlePageChange('inProgress', page)}
             />
             <TaskSection
-              title={`${user?.nickname}의 완료된 작업`}
+              title={`${loggedInUser?.nickName}의 완료된 작업`}
               taskData={completedTasks}
               onPageChange={(page) => handlePageChange('completed', page)}
             />

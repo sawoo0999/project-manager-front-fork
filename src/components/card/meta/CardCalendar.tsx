@@ -29,7 +29,7 @@ export default function DateRangePicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="ghost" className="p-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 px-1">
               <Icon icon="Calendar" size={20} />
               <span className="text-xs text-cardDate">
                 {safeEndDate ? format(safeEndDate, 'M월 d일') : '마감일 선택'}
