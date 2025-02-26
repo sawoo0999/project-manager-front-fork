@@ -94,7 +94,7 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
         </div>
 
         {/*  태블릿 버전 */}
-        <div className="hidden md:block lg:hidden">
+        <div className="hidden h-[200px] md:block lg:hidden">
           <div className="grid grid-cols-[140px_140px_140px_140px] place-items-center">
             <div className="contents">
               <div className="text-sm text-center py-1 border-b border-bodyBorder">
@@ -147,7 +147,7 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
         </div>
 
         {/* ✅ 모바일 버전 */}
-        <div className="block md:hidden">
+        <div className="block h-[200px] md:hidden">
           <div className="grid grid-cols-[100px_120px_40px] place-items-center">
             <div className="contents">
               <div className="text-xs text-center py-1 border-b border-bodyBorder">

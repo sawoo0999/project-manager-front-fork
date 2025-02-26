@@ -128,7 +128,13 @@ export default function CardContentContainer({
     try {
       await updateCardMutation.mutateAsync({
         cardId: parsedCardId,
-        data: values,
+        data: {
+          title: values.title,
+          content: values.content,
+          startDate: values.startDate,
+          endDate: values.endDate,
+          categoryId: values.categoryId,
+        },
       })
       toast.success('카드가 수정되었습니다')
       navigate(`/project/${projectId}/section/${sectionId}/${cardId}`)
