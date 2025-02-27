@@ -41,7 +41,7 @@ export default function TaskContainer() {
   if (inProgressTasks && completedTasks)
     return (
       <div className="w-full bg-white rounded-l-lg">
-        <div className="flex flex-col w-full items-center py-5 gap-4 px-4 sm:px-2">
+        <div className="flex flex-col w-[290px] sm:w-full items-center py-5 gap-4 px-4 sm:px-2">
           <UserGreeting user={user?.nickname ?? ''} />
           <ProjectSummary
             projectCount={projects?.length ?? 0}

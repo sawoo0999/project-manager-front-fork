@@ -151,7 +151,7 @@ export default function CardContentContainer({
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white rounded-card p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6"
+        className=" w-[290px] sm:w-full  bg-white  rounded-card p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6"
       >
         <ActionButtons
           isComplete={isComplete}
@@ -193,7 +193,7 @@ export default function CardContentContainer({
         )}
       </form>
       {!isEdit && (
-        <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
+        <div className="w-[290px] sm:w-full p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6 ">
           <CommentSection cardId={parsedCardId} isComplete={isComplete} />
         </div>
       )}

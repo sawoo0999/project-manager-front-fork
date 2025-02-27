@@ -21,15 +21,25 @@ export const UserProfile = ({ isOpen }: UserProfileProps) => {
   if (isPending || !user) return null
 
   return (
-    <div className={`p-4 border-t border-gray-200`}>
-      <div
-        className={`flex items-center ${isOpen ? 'gap-3' : 'justify-center'}`}
-      >
-        <Link to="/profile" className={`${isOpen ? 'w-10 h-10' : 'w-7 h-7'}`}>
-          <img src={user.image_url} alt="프로필" className="rounded-full" />
+    <div className="p-2.5 border-t border-gray-200">
+      <div className="flex items-center transition-all duration-300 ease-in-out">
+        <Link
+          to="/profile"
+          className={` rounded-full transition-all duration-300 ease-in-out
+        ${isOpen ? 'w-10 h-10 mr-3' : 'w-7 h-7 mr-0'}`}
+        >
+          <img
+            src={user.image_url}
+            alt="프로필"
+            className="rounded-full w-full h-full"
+          />
         </Link>
-        <div className={`${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
-          <Link to="/profile" className="font-medium">
+
+        <div
+          className={`transition-all duration-300 whitespace-nowrap overflow-hidden origin-left
+        ${isOpen ? 'opacity-100 scale-x-100 max-w-full' : 'opacity-0 scale-x-0 max-w-0'}`}
+        >
+          <Link to="/profile" className="font-medium block">
             {user.nickname}
           </Link>
           <div className="text-xs text-gray-500">{user.email}</div>

@@ -71,10 +71,9 @@ export default function ProfileContainer() {
   }
 
   return (
-    <div className="flex items-center justify-center w-full mx-auto bg-white rounded-md">
-      <div className="flex flex-col items-center justify-center max-w-lg">
+    <div className="flex items-center justify-center w-[300px] sm:w-full p-10  bg-white rounded-md">
+      <div className="flex flex-col  items-center  max-w-lg">
         <h1 className="text-xl font-medium mb-8">프로필</h1>
-
         <ProfileImageUploader
           imageUrl={watch('image_url') ?? loggedInUser?.imageUrl}
           onChange={(newImage) =>

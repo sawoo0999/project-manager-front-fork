@@ -15,7 +15,7 @@ export default function CardDetailContainer({
 
   if (project?.data)
     return (
-      <div className="min-h-screen bg-white w-full rounded-card">
+      <div className="w-full min-h-screen bg-white rounded-card ">
         <ProjectHeader {...project?.data} />
         <CardContentContainer projectId={projectId} mode={mode} />
       </div>

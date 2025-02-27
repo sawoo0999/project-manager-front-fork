@@ -1,6 +1,5 @@
 import { useQueryProjectList } from '@/shared/queries/useQueryProjectList'
 import { Icon } from '@/shared/ui/Icon'
-// components/Sidebar.tsx
 import { useSidebarStore } from '@/store/sidebarStore'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -24,8 +23,8 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`p-2 bg-gradient-to-b from-white to-screenBg rounded-tr-lg flex flex-col transition-all duration-300 ease-in-out text-sm font-pretendard
-      ${isOpen ? 'min-w-64 w-64' : 'w-16 items-center'}`}
+      className={`p-2 bg-gradient-to-b from-white to-screenBg rounded-tr-lg flex flex-col transition-all duration-300 ease-in-out text-sm
+      ${isOpen ? 'max-w-64 w-full' : 'max-w-16 w-16'}`}
     >
       <CreateProjectButton isOpen={isOpen} />
       <nav className="flex-1">
@@ -33,13 +32,17 @@ export default function Sidebar() {
           <li>
             <Link
               to="/home"
-              className={`flex items-center p-2 hover:bg-gray-100 rounded-lg 
-              ${isOpen ? 'gap-3' : 'justify-center'} w-full`}
+              className="flex items-center p-2 hover:bg-gray-100 rounded-lg w-full transition-all duration-300 ease-in-out"
             >
-              <Icon icon="Home" size={14} className="min-w-[14px]" />
+              <Icon
+                icon="Home"
+                size={14}
+                className={`min-w-[14px] transition-all duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : 'translate-x-[-4px]'}`}
+              />
               <span
-                className={`transition-all duration-300 whitespace-nowrap overflow-hidden 
-                ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
+                className={`transition-all duration-300 whitespace-nowrap overflow-hidden origin-left
+        ${isOpen ? 'opacity-100 scale-x-100 ml-3' : 'opacity-0 scale-x-0 ml-0'}`}
               >
                 홈
               </span>
@@ -48,12 +51,17 @@ export default function Sidebar() {
           <li>
             <Link
               to="/inbox"
-              className={`flex items-center p-2 hover:bg-gray-100 rounded-lg 
-                ${isOpen ? 'gap-3' : 'justify-center'} w-full`}
+              className="flex items-center p-2 hover:bg-gray-100 rounded-lg w-full transition-all duration-300 ease-in-out"
             >
-              <Icon icon="Bell" size={14} className="min-w-[14px]" />
+              <Icon
+                icon="Bell"
+                size={14}
+                className={`min-w-[14px] transition-all duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : 'translate-x-[-4px]'}`}
+              />
               <span
-                className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
+                className={`transition-all duration-300 whitespace-nowrap overflow-hidden origin-left
+        ${isOpen ? 'opacity-100 scale-x-100 ml-3' : 'opacity-0 scale-x-0 ml-0'}`}
               >
                 수신함
               </span>
@@ -61,36 +69,39 @@ export default function Sidebar() {
           </li>
         </ul>
 
-        {/* 프로젝트 리스트 */}
         <div
           className={`mt-1 px-3 transition-all duration-300 ${isOpen ? 'max-h-[500px]' : 'max-h-0'}`}
         >
-          <div
-            className={`flex items-center p-2  
-                ${isOpen ? 'gap-3' : 'justify-center'} w-full`}
-          >
-            <Icon icon="Folder" size={14} className="min-w-[14px]" />
+          <div className="flex items-center p-2 rounded-lg w-full transition-all duration-300 ease-in-out">
+            <Icon
+              icon="Folder"
+              size={14}
+              className={`min-w-[14px] transition-all duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : 'translate-x-[-4px]'}`}
+            />
             <span
-              className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
+              className={`transition-all duration-300 whitespace-nowrap overflow-hidden origin-left
+        ${isOpen ? 'opacity-100 scale-x-100 ml-3' : 'opacity-0 scale-x-0 ml-0'}`}
             >
               프로젝트
             </span>
           </div>
-          {/* api 적용할때 반복문으로 수정 */}
-          <div className="">
+          <div>
             {data?.data?.map((project) => {
               return (
                 <Link
                   key={project.id}
                   to={`/project/${project.id}`}
-                  className={`flex items-center  p-2 hover:bg-gray-100 rounded-lg cursor-pointer ${isOpen ? 'gap-2' : ''}`}
+                  className="flex items-center p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-all duration-300 ease-in-out"
                 >
                   <div
-                    className="w-3.5 h-3.5 rounded-sm min-w-[8px]"
+                    className={`w-3.5 h-3.5 rounded-sm min-w-[14px] transition-all duration-300
+      ${isOpen ? 'translate-x-0' : 'translate-x-[-4px]'}`}
                     style={{ backgroundColor: project.color }}
                   />
                   <span
-                    className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}
+                    className={`transition-all duration-300 whitespace-nowrap overflow-hidden origin-left
+      ${isOpen ? 'opacity-100 scale-x-100 ml-2' : 'opacity-0 scale-x-0 ml-0'}`}
                   >
                     {project.name}
                   </span>
