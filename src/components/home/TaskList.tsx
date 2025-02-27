@@ -10,7 +10,9 @@ interface TaskListProps {
 export default function TaskList({ taskData, onPageChange }: TaskListProps) {
   if (!taskData?.content.length) {
     return (
-      <div className="text-center py-10 text-gray-500">작업이 없습니다.</div>
+      <div className="h-[200px] text-center py-10 text-gray-500">
+        작업이 없습니다.
+      </div>
     )
   }
 
