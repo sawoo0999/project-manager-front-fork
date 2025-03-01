@@ -45,7 +45,6 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
   const [deleteMemberList, setDeleteMemberList] = useState<DeleteMemberList[]>(
     [],
   )
-  console.log(deleteMemberList)
   const [memberInput, setMemberInput] = useState('')
 
   const navigate = useNavigate()
@@ -261,7 +260,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                     setValue(
                       'color',
                       key.toUpperCase() as UppercaseCategoryColor,
-                      { shouldValidate: true },
+                      { shouldValidate: true, shouldDirty: true },
                     )
                   }
                   className={`w-4 h-4 md:w-6 md:h-6 rounded-card md:rounded-input transition-all hover:opacity-80 ${

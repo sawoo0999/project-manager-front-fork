@@ -14,6 +14,7 @@ const useQueryCardList = ({
       const { data } = await axiosApi.get(`projects/${projectId}/cards`)
       return data
     },
+    enabled: projectId > 0,
   })
   return { data, isError }
 }
