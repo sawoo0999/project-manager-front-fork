@@ -5,11 +5,13 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CreateProjectButton } from './CreateProjectButton'
 import { UserProfile } from './UserProfile'
+import { useQueryNotificationCount } from '@/shared/queries/useQueryNotificationCount'
 
 export default function Sidebar() {
   const { isOpen, setIsOpen } = useSidebarStore()
-
+  const { data: inboxCountData } = useQueryNotificationCount()
   const { data } = useQueryProjectList()
+  const inboxCount = inboxCountData?.data ?? 0
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,7 +53,7 @@ export default function Sidebar() {
           <li>
             <Link
               to="/inbox"
-              className="flex items-center p-2 hover:bg-gray-100 rounded-lg w-full transition-all duration-300 ease-in-out"
+              className="relative flex items-center p-2 hover:bg-gray-100 rounded-lg w-full transition-all duration-300 ease-in-out"
             >
               <Icon
                 icon="Bell"
@@ -65,6 +67,14 @@ export default function Sidebar() {
               >
                 수신함
               </span>
+              {inboxCount > 0 && (
+                <span
+                  className={`absolute bg-warning  text-center text-white  font-semibold  rounded-full
+                  ${isOpen ? ' w-5 h-5 right-[10px] top-[9px]    text-sm' : 'w-[15px] h-[15px] right-[1px] top-[5px] text-xs '}`}
+                >
+                  {inboxCount}
+                </span>
+              )}
             </Link>
           </li>
         </ul>

@@ -4,7 +4,6 @@ import SignupPage from '@/components/auth/Signup'
 import CardDetailContainer from '@/components/card/CardDetailContainer'
 import CategoryContainer from '@/components/category/CategoryContainer'
 import TaskContainer from '@/components/home/TaskContainer'
-import NotificationPage from '@/components/inbox/NotificationPage'
 import LandingContainer from '@/components/landing/LandingContainer'
 import ProfileContainer from '@/components/profile/ProfileContainer'
 import ProjectMainContainer from '@/components/projectMain/ProjectMainContainer'
@@ -14,6 +13,7 @@ import { AuthLayout, MainLayout } from '@/layout/index'
 import { createBrowserRouter } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
+import NotificationContainer from '@/components/inbox/NotificationContainer'
 
 const router = createBrowserRouter([
   {
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'inbox',
-        element: <NotificationPage />,
+        element: <NotificationContainer />,
       },
       {
         path: 'profile',

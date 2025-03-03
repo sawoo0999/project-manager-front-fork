@@ -43,4 +43,14 @@ export const QUERY_KEYS = {
     lists: (id: number) => [...QUERY_KEYS.password.all, 'list', id] as const,
     detail: (id: number) => [...QUERY_KEYS.password.all, id] as const,
   },
+  notifications: {
+    all: ['notifications'] as const,
+    commentList: () =>
+      [...QUERY_KEYS.notifications.all, 'comments', 'list'] as const,
+    inviteList: () =>
+      [...QUERY_KEYS.notifications.all, 'invites', 'list'] as const,
+    count: () => [...QUERY_KEYS.notifications.all, 'count'] as const,
+    read: (notificationId: number) =>
+      [...QUERY_KEYS.notifications.all, 'comments', notificationId] as const,
+  },
 } as const
