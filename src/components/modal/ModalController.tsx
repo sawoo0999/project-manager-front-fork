@@ -4,6 +4,7 @@ import AccountWithdrawal from './AccountWithdrawal'
 import CreateCardModal from './CreateCardModal'
 import CreateProjectModal from './CreateProjectModal'
 import CreateSectionModal from './CreateSectionModal'
+import DeleteModal from './DeleteModal'
 import UpdateSectionModal from './UpdateSectionModal'
 
 export type ModalKey =
@@ -12,6 +13,7 @@ export type ModalKey =
   | 'create-section'
   | 'update-section'
   | 'account-withdrawal'
+  | 'delete-alert'
 
 const MODALS: Record<ModalKey, ReactNode> = {
   'create-card': <CreateCardModal modalId="create-card" />,
@@ -19,6 +21,7 @@ const MODALS: Record<ModalKey, ReactNode> = {
   'create-section': <CreateSectionModal modalId="create-section" />,
   'update-section': <UpdateSectionModal modalId="update-section" />,
   'account-withdrawal': <AccountWithdrawal modalId="account-withdrawal" />,
+  'delete-alert': <DeleteModal modalId="delete-alert" />,
 }
 
 export default function ModalController() {

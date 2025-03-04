@@ -1,5 +1,5 @@
 import logoIcon from '@/assets/images/logo-text.png'
-import { postSignup } from '@/services/auth.service'
+import { postLogin, postSignup } from '@/services/auth.service'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/shared/ui/common/form'
 import { Input } from '@/shared/ui/common/input'
+import useSessionStore from '@/store/useSessionStore'
 import { signUpSchema } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
@@ -33,13 +34,26 @@ export default function SignupPage() {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
+  const setSessionInfo = useSessionStore((state) => state.setSessionInfo)
+
+  const loginMutation = useMutation({
+    mutationFn: postLogin,
+    onSuccess: (data) => {
+      setSessionInfo({
+        access_token: data.token,
+        isAuthenticated: true,
+      })
+
+      navigate('/home')
+    },
+  })
 
   const signupMutation = useMutation({
     mutationFn: postSignup,
     onSuccess: () => {
-      navigate('/login', {
-        state: { message: '회원가입이 완료되었습니다. 로그인해주세요.' },
-      })
+      // navigate('/login', {
+      //   state: { message: '회원가입이 완료되었습니다. 로그인해주세요.' },
+      // })
     },
   })
 
@@ -62,6 +76,10 @@ export default function SignupPage() {
         nickname: data.nickname,
       })
       toast.success('회원가입이 완료되었습니다')
+      await loginMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      })
     } catch (error: unknown) {
       const message = axios.isAxiosError(error)
         ? error.response?.data?.message

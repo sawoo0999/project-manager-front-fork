@@ -9,7 +9,7 @@ const useQueryCardList = ({
   projectId,
 }: Pick<ProjectSectionParams, 'projectId'>) => {
   const { data, isError } = useQuery<APIResponse<Card[]>>({
-    queryKey: QUERY_KEYS.cards.detail(projectId),
+    queryKey: QUERY_KEYS.cards.lists(projectId),
     queryFn: async () => {
       const { data } = await axiosApi.get(`projects/${projectId}/cards`)
       return data

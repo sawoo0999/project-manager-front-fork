@@ -18,7 +18,7 @@ const formSchema = z.object({
 })
 
 export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
-  const { closeModal, getModalData } = useModalStore()
+  const { closeModal, openModal, getModalData } = useModalStore()
   const modalData = getModalData('update-section')
 
   const updateSection = useMutationUpdateSection()
@@ -89,7 +89,13 @@ export default function UpdateSectionModal({ modalId }: { modalId: ModalKey }) {
             variant="categoryDelete"
             className="!px-6 !py-2"
             type="button"
-            onClick={onDelete}
+            onClick={() =>
+              openModal('delete-alert', {
+                modalText:
+                  '섹션을 삭제하시겠습니까?\n해당 카드 데이터가 모두 삭제됩니다.\n계속하시려면 아래 삭제 버튼을 눌러주세요.',
+                onClickHandler: onDelete,
+              })
+            }
           >
             삭제
           </Button>

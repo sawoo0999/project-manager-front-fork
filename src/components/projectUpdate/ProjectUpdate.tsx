@@ -18,6 +18,7 @@ import { Project } from '@/shared/types/project'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
+import { useModalStore } from '@/store/useModalStore'
 import { useGetUser } from '@/store/useUserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
@@ -39,6 +40,8 @@ interface DeleteMemberList {
 
 export default function ProjectUpdate({ id: projectId, name, color }: Project) {
   const { data: queryMemberList } = useQueryMember({ projectId })
+
+  const { openModal } = useModalStore()
 
   const [memberList, setMemberList] = useState<TempMember[]>([])
   const [addMemberList, setAddMemberList] = useState<string[]>([])
@@ -282,7 +285,13 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
             type="button"
             variant="categoryDelete"
             className="!py-2 !px-6"
-            onClick={onDelete}
+            onClick={() =>
+              openModal('delete-alert', {
+                modalText:
+                  '프로젝트를 삭제하시겠습니까?\n해당 프로젝트의 섹션과 카드 데이터가 모두 삭제됩니다.\n계속하시려면 아래 삭제 버튼을 눌러주세요.',
+                onClickHandler: onDelete,
+              })
+            }
           >
             삭제
           </Button>

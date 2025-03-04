@@ -13,6 +13,8 @@ interface ModalData {
   sectionName?: string
   sectionId?: number
   projectId?: number
+  modalText?: string
+  onClickHandler?: () => void
   // 필요한 다른 props들도 여기에 추가 가능
 }
 
@@ -23,6 +25,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     'create-section': false,
     'update-section': false,
     'account-withdrawal': false,
+    'delete-alert': false,
   },
   modalData: {
     'create-card': {},
@@ -30,6 +33,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     'create-section': {},
     'update-section': {},
     'account-withdrawal': {},
+    'delete-alert': {},
   },
   openModal: (key, data) =>
     set((state) => ({

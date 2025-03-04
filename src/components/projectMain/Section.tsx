@@ -18,6 +18,7 @@ export default function Section({
   const [isOpen, setIsOpen] = useState(false)
 
   const { openModal } = useModalStore()
+
   const { data: cardList } = useQueryCardList({ projectId })
 
   const filteredCardList = cardList?.data?.filter(
