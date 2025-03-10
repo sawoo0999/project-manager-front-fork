@@ -12,6 +12,7 @@ export interface NotificationInvites {
   id: string
   name: string
   color: string
+  nickname: string
 }
 
 export interface NotificationRoles {

@@ -14,7 +14,11 @@ export default function EmptyState({
   return (
     <div className="flex flex-col items-center gap-4 py-4">
       <div className="w-9 h-9 text-gray-400">
-        <Icon icon={iconName} size={36} className="text-gray-400" />
+        <Icon
+          icon={iconName}
+          size={36}
+          className="text-cardDate fill-cardDate"
+        />
       </div>
       <p className="text-base font-semibold text-gray-400 text-center">
         {message}

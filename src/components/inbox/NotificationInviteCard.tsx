@@ -55,8 +55,10 @@ export default function NotificationInviteCard({
         {<Icon icon="Member" size={32} className="w-6 h-6" />}
       </div>
       <div className="flex flex-col gap-4 flex-grow">
-        <h3 className="font-bold text-sm">
-          {`${inviterName} 님으로부터 ${projectName}프로젝트 초대 요청이 왔습니다.`}
+        <h3 className=" text-sm">
+          <span className="font-bold">{`${inviterName}`}</span> 님으로부터
+          <span className="font-bold">{` ${projectName}`}</span> 프로젝트 초대
+          요청이 왔습니다.
         </h3>
         <div className="flex justify-end gap-2 mt-2">
           <Button

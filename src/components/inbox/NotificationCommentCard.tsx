@@ -80,11 +80,19 @@ export default function NotificationCommentCard({
         </p>
         <p className="text-cardDate text-xs md:text-sm  ">{formattedDate}</p>
       </div>
-      <button className="p-1" onClick={handleDeleteNotification}>
+      <button
+        className="p-1"
+        onClick={(e) => {
+          e.stopPropagation()
+          handleDeleteNotification()
+        }}
+      >
         <Icon
           icon="Close"
           size={14}
-          className={`text-gray-400 md:w-3.5 md:h-3.5 w-2 h-2 ${status === 'check' ? 'opacity-50' : ''}`}
+          className={`text-gray-400 md:w-3.5 md:h-3.5 w-2 h-2 ${
+            status === 'check' ? 'opacity-50' : ''
+          }`}
         />
       </button>
     </div>

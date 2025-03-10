@@ -32,7 +32,7 @@ export default function NotificationContainer(): ReactElement {
   const enrichedInvites = (inviteData?.data ?? []).map((invite) => ({
     projectId: invite.id,
     projectName: invite.name,
-    inviterName: '초대한 사람 (임시)',
+    inviterName: invite.nickname,
   }))
 
   const enrichedProjects = (rolesData?.data ?? []).map((role) => {
