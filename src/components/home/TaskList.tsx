@@ -73,20 +73,20 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
                       className="w-6 h-6 rounded flex-shrink-0"
                       style={{ backgroundColor: task.section.project.color }}
                     />
-                    <span className="text-sm font-medium w-[120px]  truncate overflow-hidden whitespace-nowrap">
+                    <span className="text-sm font-medium w-[120px]  truncate ">
                       {task.section.project.name}
                     </span>
                   </div>
-                  <div className="text-sm font-medium text-center py-1">
-                    {task.section.project.name}
+                  <div className="text-sm font-medium text-center py-1 w-[120px]  truncate">
+                    {task.section.name}
                   </div>
-                  <div className=" text-sm font-medium text-center py-1">
+                  <div className=" text-sm font-medium text-center py-1 w-[120px]  truncate ">
                     {task.category.name}
                   </div>
-                  <div className=" text-sm font-medium text-center py-1">
+                  <div className=" text-sm font-medium text-center py-1 w-[200px]  truncate ">
                     {task.title}
                   </div>
-                  <div className=" text-xs font-medium text-center py-1">
+                  <div className=" text-xs font-medium text-center py-1 ">
                     {`${formatStartDate} ~ ${formatEndDate}`}
                   </div>
                 </Link>
@@ -129,14 +129,14 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
                       className="w-6 h-6 rounded flex-shrink-0"
                       style={{ backgroundColor: task.section.project.color }}
                     />
-                    <span className="text-sm font-medium w-[120px] truncate overflow-hidden whitespace-nowrap">
+                    <span className="text-sm font-medium w-[120px] truncate ">
                       {task.section.project.name}
                     </span>
                   </div>
-                  <div className="text-sm font-medium text-center py-2   ">
+                  <div className="text-sm font-medium text-center py-2  w-[120px] truncate  ">
                     {task.section.name}
                   </div>
-                  <div className="text-sm font-medium text-center py-2  ">
+                  <div className="text-sm font-medium text-center py-2 w-[120px] truncate  ">
                     {task.title}
                   </div>
                   <div className="text-xs font-medium text-center py-2 ">
@@ -173,10 +173,10 @@ export default function TaskList({ taskData, onPageChange }: TaskListProps) {
                   key={`tablet-${task.id} `}
                   className="contents"
                 >
-                  <div className=" text-sm font-medium text-center py-2 max-w-[120px] truncate overflow-hidden whitespace-nowrap ">
+                  <div className=" text-sm font-medium text-center py-2 max-w-[120px] truncate">
                     {task.section.project.name}
                   </div>
-                  <div className=" text-sm font-medium text-center py-2 max-w-[120px] truncate overflow-hidden whitespace-nowrap">
+                  <div className=" text-sm font-medium text-center py-2 max-w-[120px] truncate">
                     {task.title}
                   </div>
                   <div className="text-xs font-medium text-center py-2">

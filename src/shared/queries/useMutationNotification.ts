@@ -6,6 +6,7 @@ import { QUERY_KEYS } from '../constants/queryKeys'
 import {
   acceptNotification,
   checkNotification,
+  deleteNotification,
   refuseNotification,
 } from '@/services/notification.service'
 
@@ -52,10 +53,25 @@ const useMutationCheckNotification = () => {
       mutationFn: checkNotification,
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.notifications.commentList(),
+          queryKey: QUERY_KEYS.notifications.all,
         })
+      },
+      onError: (error) => {
+        console.error('초대 실패:', error.response?.data)
+      },
+    },
+  )
+}
+
+const useMutationDeleteNotification = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation<APIResponse<null>, AxiosError, { notificationId: string }>(
+    {
+      mutationFn: deleteNotification,
+      onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.notifications.count(),
+          queryKey: QUERY_KEYS.notifications.all,
         })
       },
       onError: (error) => {
@@ -69,4 +85,5 @@ export {
   useMutationRefuseNotification,
   useMutationAcceptNotification,
   useMutationCheckNotification,
+  useMutationDeleteNotification,
 }

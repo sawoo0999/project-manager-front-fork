@@ -54,9 +54,8 @@ export const QUERY_KEYS = {
       [...QUERY_KEYS.notifications.all, 'comments', 'list'] as const,
     inviteList: () =>
       [...QUERY_KEYS.notifications.all, 'invites', 'list'] as const,
+    roleList: () => [...QUERY_KEYS.notifications.all, 'roles', 'list'] as const,
     count: () => [...QUERY_KEYS.notifications.all, 'count'] as const,
-    read: (notificationId: number) =>
-      [...QUERY_KEYS.notifications.all, 'comments', notificationId] as const,
   },
   authorities: {
     all: ['authorities'] as const,

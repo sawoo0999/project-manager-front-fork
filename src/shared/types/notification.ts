@@ -14,6 +14,11 @@ export interface NotificationInvites {
   color: string
 }
 
+export interface NotificationRoles {
+  projectId: number
+  role: 'USER' | 'ADMIN'
+}
+
 export interface NotificationItem {
   notificationId?: string
   projectId?: string

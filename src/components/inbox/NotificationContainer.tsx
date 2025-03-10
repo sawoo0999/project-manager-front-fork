@@ -6,7 +6,10 @@ import { cn } from '@/shared/lib/utils'
 import {
   useQueryNotificationComment,
   useQueryNotificationInvites,
+  useQueryNotificationRole,
 } from '@/shared/queries/useQueryNotification'
+import { useQueryProjectList } from '@/shared/queries/useQueryProjectList'
+import NotificationProjectRoleCard from './NotificationRoleCard'
 
 type TabType = 'news' | 'invite'
 
@@ -17,21 +20,34 @@ export default function NotificationContainer(): ReactElement {
     useQueryNotificationComment()
   const { data: inviteData, isPending: isInvitesPending } =
     useQueryNotificationInvites()
+  const { data: rolesData, isPending: isRolesPending } =
+    useQueryNotificationRole()
+  const { data: projectsData } = useQueryProjectList()
 
   const notificationComments = (notificationData?.data ?? []).map(
     (comment) => ({
       ...comment,
-      type: 'comment' as const,
     }),
   )
   const enrichedInvites = (inviteData?.data ?? []).map((invite) => ({
     projectId: invite.id,
-    type: 'invite' as const,
     projectName: invite.name,
     inviterName: '초대한 사람 (임시)',
   }))
 
-  if (isCommentsPending || isInvitesPending) {
+  const enrichedProjects = (rolesData?.data ?? []).map((role) => {
+    const project = (projectsData?.data ?? []).find(
+      (p) => p.id === role.projectId,
+    )
+
+    return {
+      id: role.projectId,
+      name: project?.name || '알 수 없음',
+      role: role.role,
+    }
+  })
+
+  if (isCommentsPending || isInvitesPending || isRolesPending) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p>Loading...</p>
@@ -74,13 +90,22 @@ export default function NotificationContainer(): ReactElement {
       {/* ✅ 모바일/태블릿 컨텐츠 */}
       <div className="md:hidden flex flex-col gap-4 w-[280px]">
         {activeTab === 'news' ? (
-          notificationComments.length > 0 ? (
-            notificationComments.map((notification) => (
-              <NotificationCommentCard
-                key={notification.notificationId}
-                notification={notification}
-              />
-            ))
+          notificationComments.length > 0 || enrichedProjects.length > 0 ? (
+            <>
+              {notificationComments.map((notification) => (
+                <NotificationCommentCard
+                  key={notification.notificationId}
+                  notification={notification}
+                />
+              ))}
+
+              {enrichedProjects.map((project, index) => (
+                <NotificationProjectRoleCard
+                  key={`${project.id}-${index}`}
+                  project={project}
+                />
+              ))}
+            </>
           ) : (
             <EmptyState iconName="Category" message="새로운 소식이 없습니다" />
           )
@@ -100,13 +125,22 @@ export default function NotificationContainer(): ReactElement {
       <div className="hidden md:flex flex-row gap-20">
         <div className="flex flex-col gap-4 w-[400px]">
           <h2 className="font-semibold text-base">새로운 소식</h2>
-          {notificationComments.length > 0 ? (
-            notificationComments.map((notification) => (
-              <NotificationCommentCard
-                key={notification.notificationId}
-                notification={notification}
-              />
-            ))
+          {notificationComments.length > 0 || enrichedProjects.length > 0 ? (
+            <>
+              {notificationComments.map((notification) => (
+                <NotificationCommentCard
+                  key={notification.notificationId}
+                  notification={notification}
+                />
+              ))}
+
+              {enrichedProjects.map((project, index) => (
+                <NotificationProjectRoleCard
+                  key={`${project.id}-${index}`}
+                  project={project}
+                />
+              ))}
+            </>
           ) : (
             <EmptyState iconName="Category" message="새로운 소식이 없습니다" />
           )}

@@ -26,3 +26,14 @@ export const checkNotification = async ({
   const response = await axiosApi.put(`/notification/comment/${notificationId}`)
   return response.data
 }
+
+export const deleteNotification = async ({
+  notificationId,
+}: {
+  notificationId: string
+}) => {
+  const response = await axiosApi.delete(
+    `/notification/comment/${notificationId}`,
+  )
+  return response.data
+}
