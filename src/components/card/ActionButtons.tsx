@@ -6,6 +6,7 @@ import {
 } from '@/shared/queries/useMutationEditCard'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
+import { useModalStore } from '@/store/useModalStore'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -25,7 +26,7 @@ export function ActionButtons({
   const completeCardMutation = useMutationCompleteCard()
   const inProgressCardMutation = useMutationInProgressCard()
   const deleteCardMutation = useMutationDeleteCard()
-
+  const { openModal } = useModalStore()
   const handleCompleteToggle = async () => {
     try {
       const today = new Date()
@@ -89,9 +90,15 @@ export function ActionButtons({
       <div className="flex gap-2">
         {isEdit ? (
           <button
-            onClick={handleDelete}
             disabled={deleteCardMutation.isPending}
             className="h-4 sm:w-5 sm:h-5"
+            onClick={() =>
+              openModal('delete-alert', {
+                modalText:
+                  '카드를 삭제하시겠습니까?\n해당 프로젝트의 카드와 댓글 데이터가 모두 삭제됩니다.\n계속하시려면 아래 삭제 버튼을 눌러주세요.',
+                onClickHandler: handleDelete,
+              })
+            }
             type="button"
           >
             <Icon
