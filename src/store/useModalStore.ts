@@ -26,6 +26,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     'update-section': false,
     'account-withdrawal': false,
     'delete-alert': false,
+    'update-member': false,
   },
   modalData: {
     'create-card': {},
@@ -34,6 +35,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     'update-section': {},
     'account-withdrawal': {},
     'delete-alert': {},
+    'update-member': {},
   },
   openModal: (key, data) =>
     set((state) => ({

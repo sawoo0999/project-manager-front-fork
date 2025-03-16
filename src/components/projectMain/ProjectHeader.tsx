@@ -2,7 +2,7 @@ import { useQueryMember } from '@/shared/queries/useQueryMember'
 import { Project } from '@/shared/types/project'
 import { Button } from '@/shared/ui/common/button'
 import { Icon } from '@/shared/ui/Icon'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import MemberList from './MemberList'
 
@@ -12,6 +12,7 @@ export default function ProjectHeader({ id: projectId, name, color }: Project) {
   const currentProjectPath = location.pathname.split('/').slice(0, 3).join('/')
 
   const [memberListOpen, setMemberListOpen] = useState(false)
+  const toggleButtonRef = useRef(null)
 
   const { data: memberList } = useQueryMember({ projectId })
 
@@ -34,6 +35,7 @@ export default function ProjectHeader({ id: projectId, name, color }: Project) {
         />
       </div>
       <Button
+        ref={toggleButtonRef}
         variant="member"
         onClick={() => setMemberListOpen(!memberListOpen)}
       >
@@ -42,9 +44,10 @@ export default function ProjectHeader({ id: projectId, name, color }: Project) {
       </Button>
       {memberListOpen && (
         <MemberList
-          currentProjectPath={currentProjectPath}
           projectId={projectId}
           memberList={memberList}
+          onClose={() => setMemberListOpen(false)}
+          toggleButtonRef={toggleButtonRef}
         />
       )}
     </div>

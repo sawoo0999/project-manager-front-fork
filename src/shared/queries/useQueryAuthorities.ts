@@ -12,6 +12,7 @@ const useQueryAuthorities = ({
       const { data } = await axiosApi.get(`authorities/${projectId}`)
       return data.data
     },
+    enabled: !!projectId,
   })
   return { data, isError }
 }

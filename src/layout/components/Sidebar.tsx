@@ -1,3 +1,4 @@
+import { useQueryNotificationCount } from '@/shared/queries/useQueryNotificationCount'
 import { useQueryProjectList } from '@/shared/queries/useQueryProjectList'
 import { Icon } from '@/shared/ui/Icon'
 import { useSidebarStore } from '@/store/sidebarStore'
@@ -5,7 +6,6 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CreateProjectButton } from './CreateProjectButton'
 import { UserProfile } from './UserProfile'
-import { useQueryNotificationCount } from '@/shared/queries/useQueryNotificationCount'
 
 export default function Sidebar() {
   const { isOpen, setIsOpen } = useSidebarStore()

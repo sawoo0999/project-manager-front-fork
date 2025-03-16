@@ -1,8 +1,8 @@
 import {
   CATEGORY_COLOR_ENTRIES,
   CATEGORY_COLOR_VALUES,
-  UppercaseCategoryColor,
 } from '@/shared/constants/color'
+import { useUserRole } from '@/shared/hooks/useUserRole'
 import {
   useMutationDeleteMember,
   useMutationInviteProject,
@@ -18,11 +18,13 @@ import { Project } from '@/shared/types/project'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
 import { Icon } from '@/shared/ui/Icon'
+import Tooltip from '@/shared/ui/Tooltip'
 import { useModalStore } from '@/store/useModalStore'
 import { useGetUser } from '@/store/useUserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import axios, { AxiosError } from 'axios'
+import { ReactNode, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -40,6 +42,7 @@ interface DeleteMemberList {
 
 export default function ProjectUpdate({ id: projectId, name, color }: Project) {
   const { data: queryMemberList } = useQueryMember({ projectId })
+  const { userRoleIsUser } = useUserRole(projectId)
 
   const { openModal } = useModalStore()
 
@@ -80,12 +83,17 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const getColorNameByCode = (colorCode: string) =>
+      CATEGORY_COLOR_ENTRIES.find(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ([_, code]) => code === colorCode,
+      )?.[0].toUpperCase() || ''
     try {
       if (isDirty) {
         await updateProject.mutateAsync({
           id: projectId,
           name: values.title,
-          color: values.color,
+          color: getColorNameByCode(values.color),
         })
       }
       if (addMemberList.length > 0) {
@@ -102,8 +110,38 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
       setDeleteMemberList([])
       toast.success('프로젝트가 수정되었습니다')
     } catch (error) {
-      console.error('Error updating project:', error)
-      toast.error('오류가 발생하였습니다')
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{
+          statusCode: number
+          message: string
+          data: null
+        }>
+        if (axiosError.response?.data) {
+          const errorMessage = axiosError.response.data.message
+          if (errorMessage === '존재하지 않는 유저 입니다.') {
+            if (addMemberList.length === 1) {
+              toast.warning('존재하지 않는 유저는 초대할 수 없습니다')
+            } else {
+              toast.warning(
+                '존재하지 않는 유저가 포함되어 있어\n초대할 수 없습니다',
+              )
+            }
+          } else if (errorMessage === '이미 초대된 유저입니다.') {
+            if (addMemberList.length === 1) {
+              toast.warning('이미 초대된 유저입니다')
+            } else {
+              toast.warning('이미 초대된 유저가 포함되어 있습니다')
+            }
+          } else {
+            toast.error(`오류: ${errorMessage}`)
+          }
+        } else {
+          toast.error('서버 응답을 처리하는 중 오류가 발생했습니다.')
+        }
+      } else {
+        console.error('Error updating member:', error)
+        toast.error('예상치 못한 오류가 발생했습니다.')
+      }
     }
   }
 
@@ -136,6 +174,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
 
   const removeEmail = (member: DeleteMemberList) => {
     setMemberList(memberList.filter((mem) => mem.email !== member.email))
+    setAddMemberList(addMemberList.filter((email) => email !== member.email))
     if (!deleteMemberList.some((dm) => dm.userId === member.userId)) {
       setDeleteMemberList([...deleteMemberList, member])
     }
@@ -155,6 +194,61 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
       console.error('Error deleting project:', error)
       toast.error('오류가 발생하였습니다')
     }
+  }
+
+  const onClickTitleInput = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (userRoleIsUser) {
+      e.preventDefault()
+    }
+  }
+
+  const onClickInputHandler = () => {
+    if (userRoleIsUser) {
+      openModal('update-member', { projectId })
+    }
+  }
+
+  const onClickDeleteHandler = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+  ) => {
+    e.preventDefault()
+    if (!userRoleIsUser) {
+      openModal('delete-alert', {
+        modalText:
+          '프로젝트를 삭제하시겠습니까?\n해당 프로젝트의 섹션과 카드 데이터가 모두 삭제됩니다.\n계속하시려면 아래 삭제 버튼을 눌러주세요.',
+        onClickHandler: onDelete,
+      })
+    }
+  }
+
+  const onClickSubmitHandler = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+  ) => {
+    e.preventDefault()
+    if (!userRoleIsUser) {
+      handleSubmit(onSubmit)()
+    }
+  }
+
+  function ConditionalTooltip({
+    className,
+    children,
+    condition,
+    content,
+  }: {
+    className?: string
+    children: ReactNode
+    condition: boolean
+    content: ReactNode
+  }) {
+    if (condition) {
+      return (
+        <Tooltip content={content} className={className}>
+          {children}
+        </Tooltip>
+      )
+    }
+    return <>{children}</>
   }
 
   useEffect(() => {
@@ -179,16 +273,30 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
       </div>
       <form
         className="flex flex-col gap-4 text-xs md:text-sm"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          if (userRoleIsUser) {
+            e.preventDefault() // USER 권한일 때는 제출 방지
+            return
+          }
+          handleSubmit(onSubmit)(e)
+        }}
       >
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 md:gap-4">
             <label className="font-semibold">프로젝트 이름</label>
-            <Input
-              {...register('title')}
-              placeholder="프로젝트의 이름을 입력하세요"
-              className={`flex-1 ${errors.title ? 'border-warning' : ''} text-xs md:text-sm h-[30px] md:h-10`}
-            />
+            <ConditionalTooltip
+              condition={userRoleIsUser}
+              content="권한이 없습니다"
+              className="flex-1"
+            >
+              <Input
+                {...register('title')}
+                placeholder="프로젝트의 이름을 입력하세요"
+                className={`flex-1 ${errors.title ? 'border-warning' : ''} text-xs md:text-sm h-[30px] md:h-10`}
+                disabled={userRoleIsUser}
+                onClick={onClickTitleInput}
+              />
+            </ConditionalTooltip>
           </div>
 
           <div className="flex gap-1">
@@ -199,6 +307,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                 onChange={(e) => setMemberInput(e.target.value)}
                 placeholder="이메일을 입력하여 프로젝트에 멤버를 추가하세요"
                 className="text-xs md:text-sm placeholder:text-xs placeholder:md:text-sm h-[30px] md:h-10"
+                onClick={onClickInputHandler}
               />
             </div>
             <Button
@@ -260,41 +369,40 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                   key={key}
                   type="button"
                   onClick={() =>
-                    setValue(
-                      'color',
-                      key.toUpperCase() as UppercaseCategoryColor,
-                      { shouldValidate: true, shouldDirty: true },
-                    )
+                    setValue('color', color, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
                   }
                   className={`w-4 h-4 md:w-6 md:h-6 rounded-card md:rounded-input transition-all hover:opacity-80 ${
-                    (getValues('color') === key.toUpperCase() ||
-                      getValues('color') === color) &&
-                    'border-2 border-black'
+                    getValues('color') === color && 'border-2 border-black'
                   }`}
                   style={{
                     backgroundColor: color,
                   }}
                   aria-label={`Select ${color} color`}
+                  disabled={userRoleIsUser}
                 />
               ))}
             </div>
           </div>
         </div>
         <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="categoryDelete"
-            className="!py-2 !px-6"
-            onClick={() =>
-              openModal('delete-alert', {
-                modalText:
-                  '프로젝트를 삭제하시겠습니까?\n해당 프로젝트의 섹션과 카드 데이터가 모두 삭제됩니다.\n계속하시려면 아래 삭제 버튼을 눌러주세요.',
-                onClickHandler: onDelete,
-              })
-            }
+          <ConditionalTooltip
+            condition={userRoleIsUser}
+            content="권한이 없습니다"
           >
-            삭제
-          </Button>
+            <Button
+              type="button"
+              variant={userRoleIsUser ? 'disabled' : 'categoryDelete'}
+              className="!py-2 !px-6"
+              onClick={onClickDeleteHandler}
+              disabled={userRoleIsUser}
+            >
+              삭제
+            </Button>
+          </ConditionalTooltip>
+
           <div className="flex gap-3 justify-center">
             <Button
               type="button"
@@ -303,13 +411,20 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
             >
               취소
             </Button>
-            <Button
-              type="submit"
-              variant={isValid ? 'modal' : 'disabled'}
-              onClick={() => navigate(`${currentProjectPath}`)}
+            <ConditionalTooltip
+              condition={userRoleIsUser}
+              content="권한이 없습니다"
             >
-              수정
-            </Button>
+              <Button
+                variant={
+                  userRoleIsUser ? 'disabled' : isValid ? 'modal' : 'disabled'
+                }
+                onClick={onClickSubmitHandler}
+                disabled={userRoleIsUser}
+              >
+                수정
+              </Button>
+            </ConditionalTooltip>
           </div>
         </div>
       </form>

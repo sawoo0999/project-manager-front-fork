@@ -5,6 +5,7 @@ import CreateCardModal from './CreateCardModal'
 import CreateProjectModal from './CreateProjectModal'
 import CreateSectionModal from './CreateSectionModal'
 import DeleteModal from './DeleteModal'
+import UpdateMemberModal from './UpdateMember'
 import UpdateSectionModal from './UpdateSectionModal'
 
 export type ModalKey =
@@ -14,6 +15,7 @@ export type ModalKey =
   | 'update-section'
   | 'account-withdrawal'
   | 'delete-alert'
+  | 'update-member'
 
 const MODALS: Record<ModalKey, ReactNode> = {
   'create-card': <CreateCardModal modalId="create-card" />,
@@ -22,6 +24,7 @@ const MODALS: Record<ModalKey, ReactNode> = {
   'update-section': <UpdateSectionModal modalId="update-section" />,
   'account-withdrawal': <AccountWithdrawal modalId="account-withdrawal" />,
   'delete-alert': <DeleteModal modalId="delete-alert" />,
+  'update-member': <UpdateMemberModal modalId="update-member" />,
 }
 
 export default function ModalController() {

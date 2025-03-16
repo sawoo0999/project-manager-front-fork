@@ -61,5 +61,7 @@ export const QUERY_KEYS = {
     all: ['authorities'] as const,
     lists: (projectId: number) =>
       [...QUERY_KEYS.authorities.all, 'list', projectId] as const,
+    detail: (projectId: number) =>
+      [...QUERY_KEYS.authorities.all, projectId] as const,
   },
 } as const
