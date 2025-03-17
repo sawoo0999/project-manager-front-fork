@@ -11,7 +11,7 @@ export const UserProfile = ({ isOpen }: UserProfileProps) => {
   const setUser = useSetUser()
   if (user) {
     setUser({
-      // id: user.id,
+      id: user.id,
       email: user.email,
       nickName: user.nickname,
       imageUrl: user.image_url,

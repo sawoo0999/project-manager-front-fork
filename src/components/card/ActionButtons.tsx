@@ -1,12 +1,15 @@
 import { useProjectId } from '@/shared/hooks/useProjectId'
+import { useUserRole } from '@/shared/hooks/useUserRole'
 import {
   useMutationCompleteCard,
   useMutationDeleteCard,
   useMutationInProgressCard,
 } from '@/shared/queries/useMutationEditCard'
 import { Button } from '@/shared/ui/common/button'
+import ConditionalTooltip from '@/shared/ui/ConditionalTooltip'
 import { Icon } from '@/shared/ui/Icon'
 import { useModalStore } from '@/store/useModalStore'
+import { useGetUser } from '@/store/useUserStore'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -14,19 +17,28 @@ interface ActionButtonsProps {
   isComplete: boolean
   cardId: number
   isEdit: boolean
+  cardOwner: string
 }
 
 export function ActionButtons({
   isComplete,
   cardId,
   isEdit,
+  cardOwner,
 }: ActionButtonsProps) {
   const navigate = useNavigate()
   const projectId = useProjectId()
+  const { userRoleIsUser } = useUserRole(projectId)
+  const getUser = useGetUser()
+  const loggedInUser = getUser()
+  const isCardOwner = loggedInUser?.nickName === cardOwner
+  const hasCardAccessPermission = isCardOwner || !userRoleIsUser
+
   const completeCardMutation = useMutationCompleteCard()
   const inProgressCardMutation = useMutationInProgressCard()
   const deleteCardMutation = useMutationDeleteCard()
   const { openModal } = useModalStore()
+
   const handleCompleteToggle = async () => {
     try {
       const today = new Date()
@@ -64,29 +76,34 @@ export function ActionButtons({
 
   return (
     <div className="flex w-full justify-between">
-      <Button
-        variant={isComplete ? 'categoryDelete' : 'modalOutline'}
-        className="group flex gap-2 p-2 sm:p-3 h-7 sm:h-8 "
-        onClick={(e) => {
-          e.preventDefault()
-          handleCompleteToggle()
-        }}
-        type="button"
-        disabled={completeCardMutation.isPending}
+      <ConditionalTooltip
+        content="권한이 없습니다"
+        condition={!hasCardAccessPermission}
       >
-        <div
-          className={`w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full  ${
-            isComplete ? 'bg-warning' : 'bg-primary'
-          } group-hover:bg-white`}
-        />
-        <span>
-          {completeCardMutation.isPending
-            ? '처리 중...'
-            : isComplete
-              ? '진행중으로 변경'
-              : '완료로 표시'}
-        </span>
-      </Button>
+        <Button
+          variant={isComplete ? 'categoryDelete' : 'modalOutline'}
+          className="group flex gap-2 p-2 sm:p-3 h-7 sm:h-8 "
+          onClick={(e) => {
+            e.preventDefault()
+            handleCompleteToggle()
+          }}
+          type="button"
+          disabled={completeCardMutation.isPending || !hasCardAccessPermission}
+        >
+          <div
+            className={`w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full  ${
+              isComplete ? 'bg-warning' : 'bg-primary'
+            } group-hover:bg-white`}
+          />
+          <span>
+            {completeCardMutation.isPending
+              ? '처리 중...'
+              : isComplete
+                ? '진행중으로 변경'
+                : '완료로 표시'}
+          </span>
+        </Button>
+      </ConditionalTooltip>
       <div className="flex gap-2">
         {isEdit ? (
           <button
@@ -108,9 +125,21 @@ export function ActionButtons({
             />
           </button>
         ) : (
-          <Link to="edit">
-            <Icon icon="Setting" size={18} className="sm:w-5 sm:h-5" />
-          </Link>
+          <ConditionalTooltip
+            content="권한이 없습니다"
+            condition={!hasCardAccessPermission}
+          >
+            <Link
+              to="edit"
+              className={!hasCardAccessPermission ? 'pointer-events-none' : ''}
+            >
+              <Icon
+                icon="Setting"
+                size={18}
+                className={`sm:w-5 sm:h-5 ${!hasCardAccessPermission && 'text-modalPlaceholder'}`}
+              />
+            </Link>
+          </ConditionalTooltip>
         )}
         <button
           onClick={() => navigate(`/project/${projectId}`)}

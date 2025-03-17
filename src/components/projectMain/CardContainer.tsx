@@ -1,10 +1,9 @@
 import { useUserRole } from '@/shared/hooks/useUserRole'
 import { useQuerySectionList } from '@/shared/queries/useQuerySectionList'
 import { ProjectSectionParams } from '@/shared/types/common'
+import ConditionalTooltip from '@/shared/ui/ConditionalTooltip'
 import { Icon } from '@/shared/ui/Icon'
-import Tooltip from '@/shared/ui/Tooltip'
 import { useModalStore } from '@/store/useModalStore'
-import { ReactNode } from 'react'
 import Section from './Section'
 
 export default function CardContainer({
@@ -17,27 +16,6 @@ export default function CardContainer({
 
   if (isError) {
     return <div className="text-red-500">Error loading sections.</div>
-  }
-
-  function ConditionalTooltip({
-    className,
-    children,
-    condition,
-    content,
-  }: {
-    className?: string
-    children: ReactNode
-    condition: boolean
-    content: ReactNode
-  }) {
-    if (condition) {
-      return (
-        <Tooltip content={content} className={className}>
-          {children}
-        </Tooltip>
-      )
-    }
-    return <>{children}</>
   }
 
   return (

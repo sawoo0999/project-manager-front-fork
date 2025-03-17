@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 interface User {
-  // id: string
+  id: number
   email: string
   nickName: string
   imageUrl?: string

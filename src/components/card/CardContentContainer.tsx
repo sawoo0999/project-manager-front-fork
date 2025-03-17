@@ -1,18 +1,18 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import { useQueryCardDetail } from '@/shared/queries/useQueryCardDetail'
 import { useMutationUpdateCard } from '@/shared/queries/useMutationEditCard'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useCallback, useEffect } from 'react'
-import { ActionButtons } from './ActionButtons'
-import CardMetaInfo from './CardMetaInfo'
-import CardHeader from './CardHeader'
-import CardDescription from './CardDescription'
+import { useQueryCardDetail } from '@/shared/queries/useQueryCardDetail'
 import { useQueryCategoryList } from '@/shared/queries/useQueryCategoryList'
 import { Category } from '@/shared/types/category'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { z } from 'zod'
+import { ActionButtons } from './ActionButtons'
+import CardDescription from './CardDescription'
 import CardEditButtons from './CardEditButtons'
+import CardHeader from './CardHeader'
+import CardMetaInfo from './CardMetaInfo'
 import CommentSection from './meta/CommentSection'
 
 interface CardContentContainerProps {
@@ -157,6 +157,7 @@ export default function CardContentContainer({
           isComplete={isComplete}
           cardId={parsedCardId}
           isEdit={isEdit}
+          cardOwner={card.nickName}
         />
         <CardHeader
           register={register}

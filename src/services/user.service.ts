@@ -1,6 +1,7 @@
 import axiosApi from '@/helper/api_helper'
 
 export interface User {
+  id: number
   email: string
   nickname: string
   image_url?: string

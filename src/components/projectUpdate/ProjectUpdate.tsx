@@ -17,14 +17,14 @@ import { Member } from '@/shared/types/member'
 import { Project } from '@/shared/types/project'
 import { Button } from '@/shared/ui/common/button'
 import { Input } from '@/shared/ui/common/input'
+import ConditionalTooltip from '@/shared/ui/ConditionalTooltip'
 import { Icon } from '@/shared/ui/Icon'
-import Tooltip from '@/shared/ui/Tooltip'
 import { useModalStore } from '@/store/useModalStore'
 import { useGetUser } from '@/store/useUserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import axios, { AxiosError } from 'axios'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -228,27 +228,6 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
     if (!userRoleIsUser) {
       handleSubmit(onSubmit)()
     }
-  }
-
-  function ConditionalTooltip({
-    className,
-    children,
-    condition,
-    content,
-  }: {
-    className?: string
-    children: ReactNode
-    condition: boolean
-    content: ReactNode
-  }) {
-    if (condition) {
-      return (
-        <Tooltip content={content} className={className}>
-          {children}
-        </Tooltip>
-      )
-    }
-    return <>{children}</>
   }
 
   useEffect(() => {
