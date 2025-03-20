@@ -1,5 +1,5 @@
 import axiosApi from '@/helper/api_helper'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants/queryKeys'
 import { APIResponse } from '../types/response'
 import {
@@ -9,12 +9,16 @@ import {
 } from '../types/notification'
 
 const useQueryNotificationComment = () => {
+  const queryClient = useQueryClient()
   const { data, isError, isPending } = useQuery<
     APIResponse<NotificationComment[]>
   >({
     queryKey: QUERY_KEYS.notifications.commentList(),
     queryFn: async () => {
       const { data } = await axiosApi.get('/notification/comment')
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications.count(),
+      })
       return data
     },
   })
@@ -35,12 +39,16 @@ const useQueryNotificationInvites = () => {
 }
 
 const useQueryNotificationRole = () => {
+  const queryClient = useQueryClient()
   const { data, isError, isPending } = useQuery<
     APIResponse<NotificationRoles[]>
   >({
     queryKey: QUERY_KEYS.notifications.roleList(),
     queryFn: async () => {
       const { data } = await axiosApi.get('/notification/roles')
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications.all,
+      })
       return data
     },
   })

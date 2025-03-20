@@ -45,6 +45,7 @@ export interface CardData {
   categoryName: string
   nickName: string
   photoUrl: string
+  userId: number
 }
 
 export interface DeleteCardRequest {
@@ -67,4 +68,5 @@ export interface Comments {
   nickName: string
   createAt: string
   photoUrl: string
+  userId: number
 }

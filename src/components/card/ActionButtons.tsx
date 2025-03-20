@@ -17,7 +17,7 @@ interface ActionButtonsProps {
   isComplete: boolean
   cardId: number
   isEdit: boolean
-  cardOwner: string
+  cardOwner: number
 }
 
 export function ActionButtons({
@@ -31,7 +31,7 @@ export function ActionButtons({
   const { userRoleIsUser } = useUserRole(projectId)
   const getUser = useGetUser()
   const loggedInUser = getUser()
-  const isCardOwner = loggedInUser?.nickName === cardOwner
+  const isCardOwner = loggedInUser?.id === cardOwner
   const hasCardAccessPermission = isCardOwner || !userRoleIsUser
 
   const completeCardMutation = useMutationCompleteCard()
@@ -146,7 +146,7 @@ export function ActionButtons({
           className="h-4 sm:w-5 sm:h-5"
           type="button"
         >
-          <Icon icon="Home" size={18} />
+          <Icon icon="CrossArrow" size={18} />
         </button>
       </div>
     </div>

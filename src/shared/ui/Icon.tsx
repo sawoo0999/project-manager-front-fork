@@ -15,6 +15,7 @@ import AngleDoubleRight from '@/assets/icons/angle-double-small-right.svg?react'
 import AngleDoubleUp from '@/assets/icons/angle-double-small-up.svg?react'
 import AngleLeft from '@/assets/icons/angle-small-left.svg?react'
 import AngleRight from '@/assets/icons/angle-small-right.svg?react'
+import CrossArrow from '@/assets/icons/cross-arrow.svg?react'
 import Bell from '@/assets/icons/bell.svg?react'
 import Calendar from '@/assets/icons/calendar.svg?react'
 import Category from '@/assets/icons/category.svg?react'
@@ -43,6 +44,7 @@ export type IconName =
   | 'AngleDoubleUp'
   | 'AngleLeft'
   | 'AngleRight'
+  | 'CrossArrow'
   | 'Bell'
   | 'Calendar' // 추가
   | 'ChevronDown' // 추가
@@ -69,6 +71,7 @@ const ICONS: Record<IconName, FC<SVGProps<SVGSVGElement>>> = {
   AngleDoubleUp,
   AngleLeft,
   AngleRight,
+  CrossArrow,
   Bell,
   Calendar, // 추가
   ChevronDown, // 추가

@@ -10,6 +10,9 @@ const useMutationUpdateAuthorities = () => {
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.authorities.lists(variables.projectId),
       })
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications.all,
+      })
     },
   })
 }

@@ -19,6 +19,9 @@ const useMutationCreateComment = () => {
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.comments.lists(cardId),
       })
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications.all,
+      })
     },
   })
 }

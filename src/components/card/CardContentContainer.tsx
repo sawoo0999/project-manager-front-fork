@@ -157,7 +157,7 @@ export default function CardContentContainer({
           isComplete={isComplete}
           cardId={parsedCardId}
           isEdit={isEdit}
-          cardOwner={card.nickName}
+          cardOwner={card.userId}
         />
         <CardHeader
           register={register}
