@@ -20,6 +20,7 @@ import { loginSchema } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { kakaoClientId, kakaoRedirectUrl } from '@/shared/constants/configure'
 
 interface LoginFormData {
   email: string
@@ -67,6 +68,19 @@ export default function LoginPage() {
       }
       toast.error('로그인에 실패했습니다')
     }
+  }
+
+  const KakaoLoginButton = () => {
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUrl}`
+    return (
+      <a
+        href={kakaoAuthUrl}
+        className="flex items-center justify-center w-full gap-2 bg-[#FEE500] text-black rounded-button px-2 py-2 font-medium text-xs md:text-sm  hover:bg-[#ffe812] transition"
+      >
+        <Icon icon="Kakao" className="w-5 h-5" />
+        카카오계정으로 로그인
+      </a>
+    )
   }
 
   return (
@@ -157,6 +171,7 @@ export default function LoginPage() {
           </Button>
         </form>
       </Form>
+      <KakaoLoginButton />
     </div>
   )
 }

@@ -47,7 +47,7 @@ const useQueryNotificationRole = () => {
     queryFn: async () => {
       const { data } = await axiosApi.get('/notification/roles')
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.notifications.all,
+        queryKey: QUERY_KEYS.notifications.count(),
       })
       return data
     },

@@ -14,6 +14,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
 import NotificationContainer from '@/components/inbox/NotificationContainer'
+import KakaoCallbackPage from '@/components/auth/KakaoCallbackPage'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignupPage />,
+      },
+      {
+        path: 'oauth/kakao',
+        element: <KakaoCallbackPage />,
       },
     ],
   },
