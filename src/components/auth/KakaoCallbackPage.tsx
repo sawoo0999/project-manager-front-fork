@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import useSessionStore from '@/store/useSessionStore'
 import { toast } from 'react-toastify'
 import axiosApi from '@/helper/api_helper'
+import { kakaoRedirectUrl } from '@/shared/constants/configure'
 
 const KakaoCallbackPage = () => {
   const hasFetchedRef = useRef(false)
@@ -17,7 +18,7 @@ const KakaoCallbackPage = () => {
     const kakaoLogin = async () => {
       try {
         const res = await axiosApi.get(`users/oauth/kakao`, {
-          params: { code },
+          params: { code, uri: kakaoRedirectUrl },
         })
         const token = res.data.data.token
         console.log(res.data)
