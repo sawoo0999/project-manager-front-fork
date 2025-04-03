@@ -7,8 +7,10 @@ import {
   acceptNotification,
   checkNotification,
   deleteNotification,
+  deleteRoleNotification,
   refuseNotification,
 } from '@/services/notification.service'
+import { NotificationRoles } from '../types/notification'
 
 const useMutationRefuseNotification = () => {
   const queryClient = useQueryClient()
@@ -20,7 +22,7 @@ const useMutationRefuseNotification = () => {
         queryKey: QUERY_KEYS.notifications.inviteList(),
       })
     },
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       console.error('초대 실패:', error.response?.data)
     },
   })
@@ -39,7 +41,7 @@ const useMutationAcceptNotification = () => {
         queryKey: QUERY_KEYS.projects.all,
       })
     },
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       console.error('초대 실패:', error.response?.data)
     },
   })
@@ -56,7 +58,7 @@ const useMutationCheckNotification = () => {
           queryKey: QUERY_KEYS.notifications.all,
         })
       },
-      onError: (error) => {
+      onError: (error: AxiosError) => {
         console.error('초대 실패:', error.response?.data)
       },
     },
@@ -74,11 +76,26 @@ const useMutationDeleteNotification = () => {
           queryKey: QUERY_KEYS.notifications.all,
         })
       },
-      onError: (error) => {
+      onError: (error: AxiosError) => {
         console.error('초대 실패:', error.response?.data)
       },
     },
   )
+}
+
+const useMutationDeleteRoleNotification = () => {
+  const queryClient = useQueryClient()
+  return useMutation<APIResponse<null>, AxiosError, NotificationRoles>({
+    mutationFn: deleteRoleNotification,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications.all,
+      })
+    },
+    onError: (error: AxiosError) => {
+      console.error('역할 알림 삭제 실패:', error.response?.data)
+    },
+  })
 }
 
 export {
@@ -86,4 +103,5 @@ export {
   useMutationAcceptNotification,
   useMutationCheckNotification,
   useMutationDeleteNotification,
+  useMutationDeleteRoleNotification,
 }

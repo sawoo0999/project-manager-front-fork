@@ -1,4 +1,5 @@
 import axiosApi from '@/helper/api_helper'
+import { NotificationRoles } from '@/shared/types/notification'
 
 export const refuseNotification = async ({
   projectId,
@@ -35,5 +36,12 @@ export const deleteNotification = async ({
   const response = await axiosApi.delete(
     `/notification/comment/${notificationId}`,
   )
+  return response.data
+}
+
+export const deleteRoleNotification = async (payload: NotificationRoles) => {
+  const response = await axiosApi.delete('/notification/roles', {
+    data: payload,
+  })
   return response.data
 }

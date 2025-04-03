@@ -1,5 +1,7 @@
+import { useMutationDeleteRoleNotification } from '@/shared/queries/useMutationNotification'
 import { Icon } from '@/shared/ui/Icon'
 import { ReactElement } from 'react'
+import { toast } from 'react-toastify'
 
 interface NotificationProjectRole {
   id: number
@@ -14,6 +16,20 @@ interface NotificationProjectRoleCardProps {
 export default function NotificationProjectRoleCard({
   project,
 }: NotificationProjectRoleCardProps): ReactElement {
+  const deleteMutation = useMutationDeleteRoleNotification()
+  const handleDeleteRoleCard = async () => {
+    try {
+      await deleteMutation.mutateAsync({
+        projectId: project.id,
+        role: project.role,
+      })
+      toast.success('권한 알림이 삭제되었습니다')
+    } catch (error) {
+      toast.error('삭제 중 오류가 발생했습니다')
+      console.error('삭제 오류:', error)
+    }
+  }
+
   return (
     <div className="flex flex-row items-start p-4 gap-2 w-full h-[90px] bg-white shadow-md rounded-xl ">
       <div className="flex-shrink-0">
@@ -32,7 +48,12 @@ export default function NotificationProjectRoleCard({
           )} */}
         </h3>
       </div>
-      <button className="p-1">
+      <button
+        onClick={handleDeleteRoleCard}
+        disabled={deleteMutation.isPending}
+        className="p-1"
+        aria-label="알림 삭제"
+      >
         <Icon
           icon="Close"
           size={14}
