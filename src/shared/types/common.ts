@@ -11,7 +11,7 @@ export interface ProjectSectionParams {
 
 export interface TempMember {
   userId?: number
-  email: string
+  identifier: string
   imageUrl?: string
   profileColor?: string
 }

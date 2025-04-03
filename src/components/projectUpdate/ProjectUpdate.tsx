@@ -145,22 +145,18 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
     }
   }
 
-  const isValidEmail = (email: string) => {
-    return z.string().email().safeParse(email).success
-  }
-
   const addMember = () => {
     if (deleteMemberList.some((dm) => dm.email === memberInput)) {
       setDeleteMemberList(
         deleteMemberList.filter((dm) => dm.email !== memberInput),
       )
     }
-    if (memberList.some((member) => member.email === memberInput)) {
+    if (memberList.some((member) => member.identifier === memberInput)) {
       toast.warning('이미 초대된 멤버입니다')
       return
-    } else if (memberInput && isValidEmail(memberInput)) {
+    } else if (memberInput) {
       const newMember: TempMember = {
-        email: memberInput,
+        identifier: memberInput,
         profileColor:
           CATEGORY_COLOR_VALUES[
             Math.floor(Math.random() * CATEGORY_COLOR_VALUES.length)
@@ -173,7 +169,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
   }
 
   const removeEmail = (member: DeleteMemberList) => {
-    setMemberList(memberList.filter((mem) => mem.email !== member.email))
+    setMemberList(memberList.filter((mem) => mem.identifier !== member.email))
     setAddMemberList(addMemberList.filter((email) => email !== member.email))
     if (!deleteMemberList.some((dm) => dm.userId === member.userId)) {
       setDeleteMemberList([...deleteMemberList, member])
@@ -236,7 +232,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
         .filter((member: Member) => member.email !== loggedInUser.email)
         .map((member: Member) => ({
           userId: member.id,
-          email: member.email,
+          identifier: member.email,
           imageUrl: member.image_url,
           profileColor: null,
         }))
@@ -289,12 +285,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                 onClick={onClickInputHandler}
               />
             </div>
-            <Button
-              type="button"
-              className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
-              onClick={addMember}
-              disabled={!isValidEmail(memberInput)}
-            >
+            <Button type="button" onClick={addMember}>
               <Icon icon="Plus" size={10} color="white" />
             </Button>
           </div>
@@ -303,7 +294,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
             {memberList.map((member) => {
               return (
                 <div
-                  key={member.email}
+                  key={member.identifier}
                   className="flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-1 truncate">
@@ -319,10 +310,12 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                           backgroundColor: member.profileColor,
                         }}
                       >
-                        {member.email.slice(0, 1).toUpperCase()}
+                        {member.identifier.slice(0, 1).toUpperCase()}
                       </div>
                     )}
-                    <span className="truncate text-xs">{member.email}</span>
+                    <span className="truncate text-xs">
+                      {member.identifier}
+                    </span>
                   </div>
                   <Icon
                     icon="Close"
@@ -331,7 +324,7 @@ export default function ProjectUpdate({ id: projectId, name, color }: Project) {
                     onClick={() =>
                       removeEmail({
                         userId: member.userId,
-                        email: member.email,
+                        email: member.identifier,
                       })
                     }
                   />

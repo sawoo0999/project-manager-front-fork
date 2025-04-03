@@ -52,13 +52,9 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
   const createProject = useMutationCreateProject()
   const inviteMember = useMutationInviteProject()
 
-  const isValidEmail = (email: string) => {
-    return z.string().email().safeParse(email).success
-  }
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const emailList = memberList.map((member) => member.email)
+      const emailList = memberList.map((member) => member.identifier)
       const result = await createProject.mutateAsync({
         name: values.name,
         color: values.color,
@@ -79,12 +75,12 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
   }
 
   const addMember = () => {
-    if (memberList.some((member) => member.email === memberInput)) {
+    if (memberList.some((member) => member.identifier === memberInput)) {
       toast.warning('이미 초대된 멤버입니다')
       return
-    } else if (memberInput && isValidEmail(memberInput)) {
+    } else if (memberInput && memberInput) {
       const newMember: TempMember = {
-        email: memberInput,
+        identifier: memberInput,
         profileColor:
           CATEGORY_COLOR_VALUES[
             Math.floor(Math.random() * CATEGORY_COLOR_VALUES.length)
@@ -97,7 +93,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
 
   const removeEmail = (memberToRemove: string) => {
     setMemberList(
-      memberList.filter((member) => member.email !== memberToRemove),
+      memberList.filter((member) => member.identifier !== memberToRemove),
     )
   }
 
@@ -129,12 +125,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
                 className="text-xs md:text-sm placeholder:text-xs placeholder:md:text-sm h-10"
               />
             </div>
-            <Button
-              className={`${isValidEmail(memberInput) ? '' : 'bg-modalBorder'} `}
-              type="button"
-              onClick={addMember}
-              disabled={!isValidEmail(memberInput)}
-            >
+            <Button type="button" onClick={addMember}>
               <Icon icon="Plus" size={10} color="white" />
             </Button>
           </div>
@@ -143,7 +134,7 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
             {memberList.map((member) => {
               return (
                 <div
-                  key={member.email}
+                  key={member.identifier}
                   className="flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-1 truncate">
@@ -153,15 +144,17 @@ export default function CreateProjectModal({ modalId }: { modalId: ModalKey }) {
                         backgroundColor: member.profileColor,
                       }}
                     >
-                      {member.email.slice(0, 1).toUpperCase()}
+                      {member.identifier.slice(0, 1).toUpperCase()}
                     </div>
-                    <span className="truncate text-xs">{member.email}</span>
+                    <span className="truncate text-xs">
+                      {member.identifier}
+                    </span>
                   </div>
                   <Icon
                     icon="Close"
                     size={8}
                     className="fill-modalPlaceholder cursor-pointer"
-                    onClick={() => removeEmail(member.email)}
+                    onClick={() => removeEmail(member.identifier)}
                   />
                 </div>
               )
