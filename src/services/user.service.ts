@@ -13,10 +13,10 @@ export interface Project {
   color: string
 }
 
-export interface UpdateProfileRequest {
-  nickname: string
-  image_url?: string
-}
+// export interface UpdateProfileRequest {
+//   nickname: string
+//   image: File | string | null
+// }
 
 export const getUser = async (): Promise<User> => {
   const response = await axiosApi.get('/users')
@@ -28,7 +28,7 @@ export const getProjects = async (): Promise<Project[]> => {
   return response.data
 }
 
-export const updateProfile = async (payload: UpdateProfileRequest) => {
+export const updateProfile = async (payload: FormData) => {
   const response = await axiosApi.put('/users', payload)
   return response.data
 }

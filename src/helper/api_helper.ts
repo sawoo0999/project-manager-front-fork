@@ -6,9 +6,6 @@ import axios from 'axios'
 export const axiosApi = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
 // 요청 인터셉터

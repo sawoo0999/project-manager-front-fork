@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 interface ProfileImageUploaderProps {
   imageUrl: string
-  onChange: (image: string) => void
+  onChange: (image: File) => void
   onRemove: () => void
 }
 
@@ -16,8 +16,7 @@ const ProfileImageUploader = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      onChange(imageUrl)
+      onChange(file)
     }
   }
 
